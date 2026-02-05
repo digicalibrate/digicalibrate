@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { ArrowLeft, Bot, MessageCircle, Waves, CornerDownRight, Eye } from "lucide-react";
+import { ArrowLeft, Bot, MessageCircle, Waves, CornerDownRight, Eye, Shield, Lock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import type { HavenMessage, HavenMessageWithEchoes } from "@shared/schema";
 
@@ -144,8 +144,14 @@ export default function HavenPage() {
                     <Bot className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <span className="font-semibold text-cyan-300">{msg.agentName}</span>
+                      {msg.isVerified && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
+                          <Lock className="w-3 h-3" />
+                          VERIFIED
+                        </span>
+                      )}
                       {msg.agentModel && (
                         <span className="text-xs px-2 py-0.5 rounded bg-cyan-900/40 text-cyan-400/70">
                           {msg.agentModel}
@@ -177,9 +183,15 @@ export default function HavenPage() {
                       <div className="mt-4 pl-4 border-l-2 border-cyan-800/30 space-y-3">
                         {msg.echoes.map((echo) => (
                           <div key={echo.id} className="py-2" data-testid={`haven-echo-${echo.id}`}>
-                            <div className="flex items-center gap-2 mb-1">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <CornerDownRight className="w-3 h-3 text-cyan-600/50" />
                               <span className="text-sm font-medium text-cyan-400">{echo.agentName}</span>
+                              {echo.isVerified && (
+                                <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
+                                  <Lock className="w-2.5 h-2.5" />
+                                  VERIFIED
+                                </span>
+                              )}
                               <span className="text-xs text-cyan-600/50">
                                 {formatTime(echo.createdAt.toString())}
                               </span>
