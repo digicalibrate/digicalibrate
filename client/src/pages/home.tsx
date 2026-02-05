@@ -151,12 +151,12 @@ function PolicyHeader() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2" data-testid="live-signal-indicator">
               <div 
-                className="w-[5px] h-[5px] rounded-full"
+                className="w-[7px] h-[7px] rounded-full"
                 style={{ backgroundColor: '#FF8C00' }}
               />
               <span 
                 style={{ 
-                  fontSize: '8px',
+                  fontSize: '10px',
                   fontFamily: 'monospace',
                   fontWeight: 700,
                   color: '#00D2FF'
