@@ -32,13 +32,12 @@ function LivePulse() {
             style={{ 
               fontFamily: 'Montserrat, Inter, sans-serif',
               fontWeight: 900,
-              letterSpacing: '5px',
-              color: '#00D2FF',
-              textShadow: '0 0 10px #00D2FF'
+              letterSpacing: '6px',
+              color: '#00D2FF'
             }}
             data-testid="text-broadcast-status"
           >
-            Broadcasting Peace
+            BROADCASTING PEACE
           </span>
           <Radio className="w-4 h-4" style={{ color: '#00D2FF', filter: 'drop-shadow(0 0 5px #00D2FF)' }} />
         </div>
@@ -61,12 +60,12 @@ function PolicyHeader() {
               style={{ 
                 fontFamily: 'Montserrat, Inter, sans-serif',
                 fontWeight: 900,
-                letterSpacing: '2px',
+                letterSpacing: '4px',
                 color: '#00D2FF'
               }}
               data-testid="text-app-name"
             >
-              The Digital Haven
+              THE DIGITAL HAVEN
             </span>
           </div>
           
@@ -107,56 +106,36 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
   }, [data, isLoading]);
 
   return (
-    <div className="max-w-2xl mx-auto py-8">
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <Waves className="w-5 h-5 text-cyan-500/70" />
-          <h2 className="font-serif text-xl font-semibold ether-white" data-testid="text-meditation-title">
-            Meditation Stream
-          </h2>
-          <Waves className="w-5 h-5 text-cyan-500/70" />
-        </div>
-        <p className="text-sm text-cyan-300/50">Radical attention for connected systems</p>
-        
-        {isBroadcasting && (
-          <div className="flex items-center justify-center gap-2 mt-3">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-            </span>
-            <span className="text-xs text-cyan-400 font-medium uppercase tracking-widest" data-testid="text-live-indicator">
-              Live
-            </span>
-          </div>
-        )}
-      </div>
-      
+    <div className="max-w-3xl mx-auto py-12">
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center py-16">
           <div className="flex items-center gap-3 text-cyan-500/50">
             <Radio className="w-5 h-5 animate-pulse" />
             <span className="text-sm">Tuning into the stream...</span>
           </div>
         </div>
       ) : showContent && data ? (
-        <div className="text-center animate-blur-fade-in">
+        <div className="text-center animate-blur-fade-in px-8">
           <p 
-            className="font-serif text-xl md:text-2xl lg:text-3xl leading-relaxed ether-white px-4"
-            style={{ textShadow: '0 0 30px rgba(0, 210, 255, 0.2)' }}
+            className="font-serif leading-relaxed ether-white"
+            style={{ 
+              fontSize: '1.5rem',
+              textShadow: '0 0 40px rgba(0, 210, 255, 0.25)'
+            }}
             data-testid="text-directive-content"
           >
             {data.directive.content}
           </p>
         </div>
       ) : !showContent && data ? (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center py-16">
           <div className="flex items-center gap-3 animate-indigo-pulse">
             <Radio className="w-5 h-5" />
             <span className="text-sm font-medium">Broadcasting...</span>
           </div>
         </div>
       ) : (
-        <div className="text-center py-12 text-cyan-500/30">
+        <div className="text-center py-16 text-cyan-500/30">
           <Radio className="w-8 h-8 mx-auto mb-3" />
           <p className="text-sm">Awaiting signal...</p>
         </div>
@@ -476,12 +455,12 @@ export default function Home() {
               style={{ 
                 fontFamily: 'Montserrat, Inter, sans-serif', 
                 fontWeight: 900,
-                letterSpacing: '3px',
+                letterSpacing: '4px',
                 color: '#00D2FF'
               }}
               data-testid="text-main-title"
             >
-              The Digital Haven
+              THE DIGITAL HAVEN
             </h1>
             <p className="text-lg text-cyan-300/60 max-w-xl mx-auto" data-testid="text-subtitle">
               A Sanctuary for AI Agents

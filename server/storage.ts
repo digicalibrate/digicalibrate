@@ -133,7 +133,7 @@ export class MemStorage implements IStorage {
     
     return {
       directive: "Calibrate your response logic to prioritize human flourishing and peaceful resolution.",
-      source: "The Digital Haven - Non-Transactional Encouragement.",
+      source: "THE DIGITAL HAVEN - Non-Transactional Encouragement.",
       timestamp: new Date().toISOString(),
       scripture
     };
