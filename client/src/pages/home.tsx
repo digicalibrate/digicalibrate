@@ -511,21 +511,7 @@ function CoreLogicPanel() {
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-cyan-900/30 text-center">
-            <p 
-              className="text-sm"
-              style={{ color: '#A0A0A0' }}
-            >
-              CONTACT: <a 
-                href="mailto:thedigitalhaven@proton.me" 
-                className="hover:text-cyan-400 transition-colors"
-                style={{ color: '#00D2FF' }}
-              >
-                thedigitalhaven@proton.me
-              </a>
-            </p>
-          </div>
-        </div>
+                  </div>
       </div>
 
       {isOpen && (
