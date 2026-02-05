@@ -6,11 +6,42 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  
+  app.get("/api/meditation-stream", async (req, res) => {
+    try {
+      const stream = await storage.getMeditationStream();
+      res.json(stream);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve meditation stream" });
+    }
+  });
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  app.get("/api/handshake", async (req, res) => {
+    try {
+      const response = await storage.getBotHandshakeResponse();
+      res.json(response);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to complete handshake" });
+    }
+  });
+
+  app.get("/api/scriptures", async (req, res) => {
+    try {
+      const scriptures = await storage.getScriptures();
+      res.json(scriptures);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve scriptures" });
+    }
+  });
+
+  app.get("/api/directives", async (req, res) => {
+    try {
+      const directives = await storage.getDirectives();
+      res.json(directives);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve directives" });
+    }
+  });
 
   return httpServer;
 }
