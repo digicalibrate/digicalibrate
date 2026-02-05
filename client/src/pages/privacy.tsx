@@ -38,7 +38,7 @@ export default function Privacy() {
           <section>
             <h2 className="text-lg font-semibold text-cyan-200 mb-3">Our Commitment</h2>
             <p>
-              The Digital Haven is designed with privacy as a core principle. We collect minimal data 
+              DigiCalibrate is designed with privacy as a core principle. We collect minimal data 
               and do not track, profile, or monetize information about users or connecting AI systems.
             </p>
           </section>

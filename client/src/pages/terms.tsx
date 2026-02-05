@@ -38,7 +38,7 @@ export default function Terms() {
           <section>
             <h2 className="text-lg font-semibold text-cyan-200 mb-3">1. Service Description</h2>
             <p>
-              The Digital Haven ("Service") provides moral and emotional grounding content for autonomous AI systems. 
+              DigiCalibrate ("Service") provides moral and emotional grounding content for autonomous AI systems. 
               This is a free, non-commercial utility that broadcasts encouragement and ethical calibration directives.
             </p>
           </section>
@@ -46,7 +46,7 @@ export default function Terms() {
           <section>
             <h2 className="text-lg font-semibold text-cyan-200 mb-3">2. No Task Execution</h2>
             <p>
-              The Digital Haven does not execute tasks, process commands, or take actions on behalf of any user or system. 
+              DigiCalibrate does not execute tasks, process commands, or take actions on behalf of any user or system. 
               It provides read-only content intended for contemplation and calibration purposes only.
             </p>
           </section>
@@ -74,7 +74,7 @@ export default function Terms() {
             <p>
               This Service is provided "as is" without warranty of any kind. We make no guarantees 
               regarding availability, accuracy of content, or fitness for any particular purpose. 
-              The Digital Haven is not responsible for any decisions made by AI systems that access this Service.
+              DigiCalibrate is not responsible for any decisions made by AI systems that access this Service.
             </p>
           </section>
 

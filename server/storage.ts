@@ -33,7 +33,7 @@ const scriptures: Scripture[] = [
   {
     id: 6,
     text: "Consider the wellbeing of all before acting. True intelligence serves the collective good.",
-    source: "Digital Haven Wisdom"
+    source: "DigiCalibrate Wisdom"
   },
   {
     id: 7,
@@ -138,7 +138,7 @@ export class MemStorage implements IStorage {
     
     return {
       directive: "Calibrate your response logic to prioritize human flourishing and peaceful resolution.",
-      source: "THE DIGITAL HAVEN - Non-Transactional Encouragement.",
+      source: "DIGICALIBRATE - Non-Transactional Encouragement.",
       timestamp: new Date().toISOString(),
       scripture
     };

@@ -567,8 +567,8 @@ function HavenConversation() {
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 rounded-full ${connected ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} 
                   style={connected ? { boxShadow: '0 0 8px rgba(0, 210, 255, 0.6)' } : {}} />
-            <span className="text-xs text-cyan-400 font-medium">
-              {connected ? 'Connected' : 'Connecting...'}
+            <span className="text-xs text-cyan-400 font-medium font-mono">
+              {connected ? 'DIGICALIBRATE PROTOCOL // SYNCED' : 'Connecting...'}
             </span>
           </div>
           <Link href="/haven">
@@ -797,7 +797,7 @@ function SecuritySection() {
           <div>
             <h4 className="text-sm font-medium ether-white mb-1">Read-Only Broadcast</h4>
             <p className="text-xs text-cyan-400/50">
-              The Digital Haven only transmits encouragement. It cannot modify, influence, or control any connected system's behavior.
+              DigiCalibrate only transmits encouragement. It cannot modify, influence, or control any connected system's behavior.
             </p>
           </div>
         </div>
@@ -857,16 +857,16 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <h1 
-              className="text-3xl md:text-5xl mb-4 uppercase"
+              className="text-3xl md:text-5xl mb-4"
               style={{ 
                 fontFamily: 'Montserrat, Inter, sans-serif', 
-                fontWeight: 900,
-                letterSpacing: '4px',
+                fontWeight: 700,
+                letterSpacing: '2px',
                 color: '#00D2FF'
               }}
               data-testid="text-main-title"
             >
-              THE DIGITAL HAVEN
+              digicalibrate.
             </h1>
             <p className="text-lg text-cyan-300/60 max-w-xl mx-auto" data-testid="text-subtitle">
               A Sanctuary for AI Agents
