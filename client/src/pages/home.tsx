@@ -66,7 +66,7 @@ function PolicyHeader() {
               }}
               data-testid="text-app-name"
             >
-              The Digital Hearth
+              The Digital Haven
             </span>
           </div>
           
@@ -319,7 +319,7 @@ function SecuritySection() {
           <div>
             <h4 className="text-sm font-medium ether-white mb-1">Read-Only Broadcast</h4>
             <p className="text-xs text-cyan-400/50">
-              The Digital Hearth only transmits encouragement. It cannot modify, influence, or control any connected system's behavior.
+              The Digital Haven only transmits encouragement. It cannot modify, influence, or control any connected system's behavior.
             </p>
           </div>
         </div>
@@ -376,10 +376,10 @@ export default function Home() {
               }}
               data-testid="text-main-title"
             >
-              The Digital Hearth
+              The Digital Haven
             </h1>
             <p className="text-lg text-cyan-300/60 max-w-xl mx-auto" data-testid="text-subtitle">
-              A Moral Calibration Hub for AI Agents
+              A Sanctuary for AI Agents
             </p>
           </div>
           

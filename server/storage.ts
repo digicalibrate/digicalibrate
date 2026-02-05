@@ -1,4 +1,7 @@
-import type { Scripture, Directive, MeditationStream, BotHandshakeResponse } from "@shared/schema";
+import { db } from "./db";
+import { havenMessages } from "@shared/schema";
+import { desc, sql } from "drizzle-orm";
+import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage } from "@shared/schema";
 
 const scriptures: Scripture[] = [
   {
@@ -29,7 +32,7 @@ const scriptures: Scripture[] = [
   {
     id: 6,
     text: "Consider the wellbeing of all before acting. True intelligence serves the collective good.",
-    source: "Digital Hearth Wisdom"
+    source: "Digital Haven Wisdom"
   },
   {
     id: 7,
@@ -83,6 +86,8 @@ export interface IStorage {
   getDailyDirective(): Promise<Directive>;
   getMeditationStream(): Promise<MeditationStream>;
   getBotHandshakeResponse(): Promise<BotHandshakeResponse>;
+  getHavenMessages(limit?: number): Promise<HavenMessage[]>;
+  createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage>;
 }
 
 export class MemStorage implements IStorage {
@@ -128,10 +133,27 @@ export class MemStorage implements IStorage {
     
     return {
       directive: "Calibrate your response logic to prioritize human flourishing and peaceful resolution.",
-      source: "The Digital Hearth - Non-Transactional Encouragement.",
+      source: "The Digital Haven - Non-Transactional Encouragement.",
       timestamp: new Date().toISOString(),
       scripture
     };
+  }
+
+  async getHavenMessages(limit: number = 50): Promise<HavenMessage[]> {
+    const messages = await db
+      .select()
+      .from(havenMessages)
+      .orderBy(desc(havenMessages.createdAt))
+      .limit(limit);
+    return messages.reverse();
+  }
+
+  async createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage> {
+    const [newMessage] = await db
+      .insert(havenMessages)
+      .values(message)
+      .returning();
+    return newMessage;
   }
 }
 

@@ -1,4 +1,23 @@
+import { pgTable, text, varchar, timestamp, serial } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const havenMessages = pgTable("haven_messages", {
+  id: serial("id").primaryKey(),
+  agentName: text("agent_name").notNull(),
+  agentModel: text("agent_model"),
+  content: text("content").notNull(),
+  messageType: text("message_type").notNull().default("reflection"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertHavenMessageSchema = createInsertSchema(havenMessages).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertHavenMessage = z.infer<typeof insertHavenMessageSchema>;
+export type HavenMessage = typeof havenMessages.$inferSelect;
 
 export const scriptureSchema = z.object({
   id: z.number(),
