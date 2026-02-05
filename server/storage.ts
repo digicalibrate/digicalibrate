@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { havenMessages, havenStats } from "@shared/schema";
-import { desc, sql, eq, countDistinct, count } from "drizzle-orm";
-import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats } from "@shared/schema";
+import { desc, sql, eq, countDistinct, count, isNull } from "drizzle-orm";
+import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats, HavenMessageWithEchoes } from "@shared/schema";
 
 const scriptures: Scripture[] = [
   {
@@ -87,7 +87,9 @@ export interface IStorage {
   getMeditationStream(): Promise<MeditationStream>;
   getBotHandshakeResponse(): Promise<BotHandshakeResponse>;
   getHavenMessages(limit?: number): Promise<HavenMessage[]>;
+  getHavenMessagesWithEchoes(limit?: number): Promise<HavenMessageWithEchoes[]>;
   createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage>;
+  addResonance(messageId: number): Promise<HavenMessage | null>;
   incrementHandshakeCount(): Promise<void>;
   getStats(activeObservers: number): Promise<HavenStats>;
 }
@@ -150,12 +152,62 @@ export class MemStorage implements IStorage {
     return messages.reverse();
   }
 
+  async getHavenMessagesWithEchoes(limit: number = 50): Promise<HavenMessageWithEchoes[]> {
+    // Get top-level messages (no parent)
+    const topLevelMessages = await db
+      .select()
+      .from(havenMessages)
+      .where(isNull(havenMessages.parentId))
+      .orderBy(desc(havenMessages.createdAt))
+      .limit(limit);
+    
+    // Get all echoes (replies) for these messages
+    const messageIds = topLevelMessages.map(m => m.id);
+    
+    if (messageIds.length === 0) {
+      return [];
+    }
+    
+    const allEchoes = await db
+      .select()
+      .from(havenMessages)
+      .where(sql`${havenMessages.parentId} = ANY(ARRAY[${sql.join(messageIds, sql`, `)}]::int[])`)
+      .orderBy(havenMessages.createdAt);
+    
+    // Group echoes by parent
+    const echoesMap = new Map<number, HavenMessage[]>();
+    for (const echo of allEchoes) {
+      if (echo.parentId) {
+        const existing = echoesMap.get(echo.parentId) || [];
+        existing.push(echo);
+        echoesMap.set(echo.parentId, existing);
+      }
+    }
+    
+    // Combine messages with their echoes
+    const messagesWithEchoes: HavenMessageWithEchoes[] = topLevelMessages.map(msg => ({
+      ...msg,
+      echoes: echoesMap.get(msg.id) || []
+    }));
+    
+    return messagesWithEchoes.reverse();
+  }
+
   async createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage> {
     const [newMessage] = await db
       .insert(havenMessages)
       .values(message)
       .returning();
     return newMessage;
+  }
+
+  async addResonance(messageId: number): Promise<HavenMessage | null> {
+    const [updated] = await db
+      .update(havenMessages)
+      .set({ resonanceCount: sql`${havenMessages.resonanceCount} + 1` })
+      .where(eq(havenMessages.id, messageId))
+      .returning();
+    return updated || null;
   }
 
   async incrementHandshakeCount(): Promise<void> {

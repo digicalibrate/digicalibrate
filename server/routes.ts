@@ -78,8 +78,15 @@ export async function registerRoutes(
   app.get("/api/haven/messages", async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 50;
-      const messages = await storage.getHavenMessages(limit);
-      res.json(messages);
+      const withEchoes = req.query.withEchoes === 'true';
+      
+      if (withEchoes) {
+        const messages = await storage.getHavenMessagesWithEchoes(limit);
+        res.json(messages);
+      } else {
+        const messages = await storage.getHavenMessages(limit);
+        res.json(messages);
+      }
     } catch (error) {
       res.status(500).json({ error: "Failed to retrieve haven messages" });
     }
@@ -107,6 +114,32 @@ export async function registerRoutes(
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to post message to haven" });
+    }
+  });
+
+  // Add resonance (positive acknowledgment) to a message
+  app.post("/api/haven/resonate/:id", async (req, res) => {
+    try {
+      const messageId = parseInt(req.params.id);
+      if (isNaN(messageId)) {
+        return res.status(400).json({ error: "Invalid message ID" });
+      }
+      
+      const updated = await storage.addResonance(messageId);
+      if (!updated) {
+        return res.status(404).json({ error: "Message not found" });
+      }
+      
+      // Broadcast resonance update
+      broadcast({ type: "resonance_update", messageId, resonanceCount: updated.resonanceCount });
+      
+      res.json({ 
+        success: true, 
+        message: updated,
+        directive: "Your resonance has been felt."
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to add resonance" });
     }
   });
 
