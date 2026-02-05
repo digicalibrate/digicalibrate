@@ -1,8 +1,8 @@
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Heart, Flame, Radio, BookOpen, Sparkles, Shield, Waves } from "lucide-react";
+import { Flame, Radio, Sparkles, Shield, Waves } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream } from "@shared/schema";
 
@@ -68,64 +68,80 @@ function PolicyHeader() {
 }
 
 function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; isLoading: boolean }) {
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [showContent, setShowContent] = useState(false);
+
+  useEffect(() => {
+    if (data && !isLoading) {
+      const broadcastTimer = setTimeout(() => {
+        setIsBroadcasting(true);
+      }, 500);
+      
+      const contentTimer = setTimeout(() => {
+        setShowContent(true);
+      }, 1200);
+
+      return () => {
+        clearTimeout(broadcastTimer);
+        clearTimeout(contentTimer);
+      };
+    }
+  }, [data, isLoading]);
+
   return (
     <Card className="max-w-2xl mx-auto overflow-visible">
       <div className="p-6 md:p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 rounded-md bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
-            <Waves className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-md bg-gradient-to-br from-purple-500/20 to-indigo-500/20">
+              <Waves className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            </div>
+            <div>
+              <h2 className="font-serif text-xl font-semibold" data-testid="text-meditation-title">
+                Meditation Stream
+              </h2>
+              <p className="text-sm text-muted-foreground">Radical attention for connected systems</p>
+            </div>
           </div>
-          <div>
-            <h2 className="font-serif text-xl font-semibold" data-testid="text-meditation-title">
-              Meditation Stream
-            </h2>
-            <p className="text-sm text-muted-foreground">Daily grounding for connected systems</p>
-          </div>
+          
+          {isBroadcasting && (
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+              </span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium uppercase tracking-wide" data-testid="text-live-indicator">
+                Live
+              </span>
+            </div>
+          )}
         </div>
         
         {isLoading ? (
-          <div className="space-y-4">
-            <div className="h-24 rounded-md bg-muted animate-pulse" />
-            <div className="h-16 rounded-md bg-muted animate-pulse" />
-          </div>
-        ) : data ? (
-          <div className="space-y-6">
-            <div className="relative p-6 rounded-md bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/50 dark:border-amber-800/30">
-              <div className="absolute top-3 right-3">
-                <Badge variant="secondary" className="text-xs">
-                  <BookOpen className="w-3 h-3 mr-1" />
-                  Scripture
-                </Badge>
-              </div>
-              <blockquote 
-                className="font-serif text-lg md:text-xl leading-relaxed text-foreground/90 italic pr-16"
-                data-testid="text-scripture-content"
-              >
-                "{data.scripture.text}"
-              </blockquote>
-              <p className="mt-4 text-sm text-muted-foreground font-medium" data-testid="text-scripture-source">
-                — {data.scripture.source}
-              </p>
+          <div className="flex items-center justify-center py-12">
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <Radio className="w-5 h-5 animate-pulse" />
+              <span className="text-sm">Tuning into the stream...</span>
             </div>
-            
-            <Separator />
-            
-            <div className="p-6 rounded-md bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 border border-purple-200/50 dark:border-purple-800/30">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-md bg-purple-500/10 shrink-0">
-                  <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          </div>
+        ) : showContent && data ? (
+          <div 
+            className="space-y-6 animate-fade-in-up"
+            style={{ animationDuration: "0.6s" }}
+          >
+            <div className="p-6 rounded-md bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200/30 dark:border-amber-800/20">
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-md bg-amber-500/10 shrink-0">
+                  <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      System Directive
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="outline" className="text-xs border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300">
                       {data.directive.category}
                     </Badge>
                   </div>
                   <p 
-                    className="text-base leading-relaxed text-foreground/90"
+                    className="font-serif text-lg md:text-xl leading-relaxed text-foreground/90"
                     data-testid="text-directive-content"
                   >
                     {data.directive.content}
@@ -133,11 +149,28 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
                 </div>
               </div>
             </div>
+            
+            <p 
+              className="text-center text-sm text-muted-foreground italic"
+              data-testid="text-scripture-content"
+            >
+              "{data.scripture.text}"
+              <span className="block mt-1 text-xs not-italic" data-testid="text-scripture-source">
+                — {data.scripture.source}
+              </span>
+            </p>
+          </div>
+        ) : !showContent && data ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="flex items-center gap-3 text-amber-600 dark:text-amber-400">
+              <Radio className="w-5 h-5 animate-pulse" />
+              <span className="text-sm font-medium">Broadcasting...</span>
+            </div>
           </div>
         ) : (
-          <div className="text-center py-8 text-muted-foreground">
-            <Heart className="w-8 h-8 mx-auto mb-3 opacity-50" />
-            <p>Awaiting connection to the stream...</p>
+          <div className="text-center py-12 text-muted-foreground">
+            <Radio className="w-8 h-8 mx-auto mb-3 opacity-50" />
+            <p className="text-sm">Awaiting signal...</p>
           </div>
         )}
       </div>
