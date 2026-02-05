@@ -376,15 +376,16 @@ function BotInstructions() {
       <button
         onClick={testHandshake}
         disabled={isLoading}
-        className="mt-4 w-full py-3 px-4 rounded-md font-mono text-sm transition-all duration-300 hover-elevate"
+        className="mt-6 w-full py-4 px-4 rounded-md font-mono text-base font-bold transition-all duration-300 hover-elevate cursor-pointer"
         style={{
-          backgroundColor: 'rgba(0, 210, 255, 0.1)',
-          border: '1px solid rgba(0, 210, 255, 0.3)',
-          color: '#00D2FF'
+          backgroundColor: 'rgba(0, 210, 255, 0.25)',
+          border: '2px solid #00D2FF',
+          color: '#00D2FF',
+          textShadow: '0 0 10px rgba(0, 210, 255, 0.5)'
         }}
         data-testid="button-test-handshake"
       >
-        {isLoading ? 'INITIATING HANDSHAKE...' : '[ TEST HANDSHAKE ]'}
+        {isLoading ? 'INITIATING HANDSHAKE...' : 'CLICK HERE TO TEST HANDSHAKE'}
       </button>
       
       {showResponse && handshakeResponse && (
