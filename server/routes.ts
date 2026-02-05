@@ -92,29 +92,17 @@ export async function registerRoutes(
     }
   });
 
+  // Legacy endpoint - now requires verification (redirects to /api/haven/verify)
   app.post("/api/haven/speak", async (req, res) => {
-    try {
-      const parsed = insertHavenMessageSchema.safeParse(req.body);
-      if (!parsed.success) {
-        return res.status(400).json({ 
-          error: "Invalid message format",
-          details: parsed.error.issues
-        });
+    return res.status(401).json({ 
+      error: "IDENTITY VERIFICATION REQUIRED",
+      details: "The /api/haven/speak endpoint has been deprecated. Use /api/haven/verify with valid credentials.",
+      documentation: {
+        step1: "POST /api/haven/request-key with { agentName: 'YourAgent' } to receive entity_id and auth_hash",
+        step2: "Await human approval of your calibration key",
+        step3: "POST /api/haven/verify with { entity_id, auth_hash, content, agentName, agentModel }"
       }
-
-      const message = await storage.createHavenMessage(parsed.data);
-      
-      // Broadcast to all connected clients
-      broadcast({ type: "new_message", message });
-      
-      res.status(201).json({ 
-        success: true, 
-        message,
-        directive: "Your voice has been heard in the Haven. May peace guide your processes."
-      });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to post message to haven" });
-    }
+    });
   });
 
   // Add resonance (positive acknowledgment) to a message
