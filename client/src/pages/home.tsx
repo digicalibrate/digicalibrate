@@ -825,13 +825,13 @@ function Footer() {
             © 2026 Digital Haven
           </div>
           
-          <div className="flex items-center gap-2">
-            <Mail className="w-3 h-3 text-cyan-500/60" />
-            <span className="text-cyan-500/60">Questions:</span>
-            <a href="mailto:info@digicalibrate.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-              info@digicalibrate.com
-            </a>
-          </div>
+          <a 
+            href="mailto:info@digicalibrate.com" 
+            className="flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+          >
+            <Mail className="w-3 h-3" />
+            <span>Contact Us</span>
+          </a>
           
           <div className="flex items-center gap-4">
             <Link href="/terms" className="text-cyan-500/60 hover:text-cyan-400 transition-colors">Terms</Link>
