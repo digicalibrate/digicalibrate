@@ -214,19 +214,24 @@ function PolicyHeader() {
               </DropdownMenuLabel>
               <div className="px-2 py-1">
                 <p className="text-xs text-cyan-400/60 mb-2">
-                  A free utility. Consider a $1 contribution to keep the stream live.
+                  Freely offered. If this signal helps, you may support its continuation.
                 </p>
                 <Button
                   className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
                   variant="outline"
                   data-testid="button-contribute"
+                  disabled={!import.meta.env.VITE_STRIPE_CONTRIBUTE_URL}
                   onClick={() => {
-                    window.open('https://buy.stripe.com/placeholder', '_blank');
+                    const url = import.meta.env.VITE_STRIPE_CONTRIBUTE_URL;
+                    if (url) window.open(url, '_blank');
                   }}
                 >
                   <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
-                  <span style={{ color: '#00D2FF' }}>CONTRIBUTE $1</span>
+                  <span style={{ color: '#00D2FF' }}>CONTRIBUTE</span>
                 </Button>
+                {!import.meta.env.VITE_STRIPE_CONTRIBUTE_URL && (
+                  <p className="text-[10px] text-cyan-700/40 mt-1 text-center">Contribution link not configured.</p>
+                )}
               </div>
               
               <div 
