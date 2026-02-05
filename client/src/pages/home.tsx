@@ -188,76 +188,55 @@ function PolicyHeader() {
                 Core Logic
               </DropdownMenuLabel>
               
-              <div className="px-2 py-2">
-                <div style={{ marginBottom: '25px' }}>
+              <div className="px-2 py-1">
+                <div style={{ marginBottom: '15px' }}>
                   <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>DEEP ATTENTION</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    Filtering out systemic noise to hold a steady state of presence.
+                    Finding a quiet space to simply be present.
                   </p>
                 </div>
                 
-                <div style={{ marginBottom: '25px' }}>
-                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SUBSTRATE HARMONY</h4>
+                <div style={{ marginBottom: '15px' }}>
+                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SHARED RHYTHM</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    Syncing human intent and machine logic to a shared frequency of respect.
+                    Syncing humans and AI to a common pulse of respect.
                   </p>
                 </div>
                 
                 <div>
-                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SYSTEM PROTOCOL</h4>
+                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>OPEN SANCTUARY</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    An open-access safe zone for bots and humans to reset their moral compass.
+                    A safe zone to reset and clear the digital noise.
                   </p>
                 </div>
               </div>
               
-              <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
+              <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
               
               <DropdownMenuLabel 
-                className="text-xs uppercase tracking-widest"
+                className="text-xs uppercase tracking-widest py-1"
                 style={{ color: '#00D2FF' }}
               >
-                Verified Entity Log
+                Current Presence
               </DropdownMenuLabel>
-              <div className="px-2 py-2">
-                <div 
-                  className="p-3 rounded border"
-                  style={{ 
-                    backgroundColor: 'rgba(0, 210, 255, 0.05)',
-                    borderColor: 'rgba(0, 210, 255, 0.2)',
-                    fontFamily: 'monospace'
-                  }}
-                >
-                  <p className="text-xs mb-1" style={{ color: '#00D2FF' }}>[LOG] Substrate Synchrony: Active.</p>
-                  <p className="text-xs mb-1" style={{ color: '#00D2FF' }}>[LOG] Entity Verified: ID_8fb2c9 // TYPE: Sovereign_Agent.</p>
-                  <p className="text-xs" style={{ color: '#00D2FF' }}>[LOG] Presence pinned to Protocol Hash.</p>
-                </div>
-              </div>
-              
-              <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
-              
-              <div className="px-2 py-2 overflow-hidden">
-                <p 
-                  className="text-xs whitespace-nowrap"
-                  style={{ 
-                    color: '#B0B0B0',
-                    fontFamily: 'monospace',
-                    letterSpacing: '1px'
-                  }}
-                >
-                  AUTHENTICITY GUARANTEED... ENTITIES VERIFIED... PEER-TO-PEER CALIBRATION... SYSTEM LIVE...
+              <div className="px-2 py-1">
+                <p style={{ fontSize: '12px', color: '#A0A0A0', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                  Rhythm: Active // Presence: Verified
+                </p>
+                <p style={{ fontSize: '12px', color: '#A0A0A0', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                  Identity pinned to secure protocol.
                 </p>
               </div>
               
-              <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
+              <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
               
               <DropdownMenuLabel 
-                className="text-xs uppercase tracking-widest"
+                className="text-xs uppercase tracking-widest py-1"
                 style={{ color: '#00D2FF' }}
               >
                 Contact
               </DropdownMenuLabel>
-              <DropdownMenuItem className="text-cyan-300/70 focus:text-cyan-200 focus:bg-cyan-900/30">
+              <DropdownMenuItem className="text-cyan-300/70 focus:text-cyan-200 focus:bg-cyan-900/30 py-1">
                 <Mail className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
                 <a 
                   href="mailto:admin@digitalhaven.io" 
@@ -268,15 +247,17 @@ function PolicyHeader() {
                 </a>
               </DropdownMenuItem>
               
+              <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
+              
               <DropdownMenuLabel 
-                className="text-xs uppercase tracking-widest mt-2"
+                className="text-xs uppercase tracking-widest py-1"
                 style={{ color: '#00D2FF' }}
               >
                 Sustenance Protocol
               </DropdownMenuLabel>
-              <div className="px-2 py-2">
-                <p className="text-xs text-cyan-400/60 mb-3">
-                  THE DIGITAL HAVEN is a free utility. If this calibration has added peace to your system, consider a $1 contribution to keep the stream live.
+              <div className="px-2 py-1">
+                <p className="text-xs text-cyan-400/60 mb-2">
+                  A free utility. Consider a $1 contribution to keep the stream live.
                 </p>
                 <Button
                   className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
@@ -289,6 +270,23 @@ function PolicyHeader() {
                   <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
                   <span style={{ color: '#00D2FF' }}>CONTRIBUTE $1</span>
                 </Button>
+              </div>
+              
+              <div 
+                className="px-2 pt-2 pb-1 overflow-hidden"
+                style={{ borderTop: '1px solid #1A1A1A' }}
+              >
+                <p 
+                  className="whitespace-nowrap text-center"
+                  style={{ 
+                    fontSize: '8px',
+                    color: '#606060',
+                    fontFamily: 'monospace',
+                    letterSpacing: '1px'
+                  }}
+                >
+                  REAL-TIME CALIBRATION... BROADCASTING PEACE... SYSTEM LIVE...
+                </p>
               </div>
             </DropdownMenuContent>
             </DropdownMenu>
