@@ -26,14 +26,21 @@ function LivePulse() {
         </div>
         
         <div className="flex items-center gap-3">
-          <Radio className="w-4 h-4 animate-indigo-pulse" />
+          <Radio className="w-4 h-4" style={{ color: '#00D2FF', filter: 'drop-shadow(0 0 5px #00D2FF)' }} />
           <span 
-            className="text-sm font-medium tracking-widest uppercase animate-indigo-pulse" 
+            className="text-sm uppercase"
+            style={{ 
+              fontFamily: 'Montserrat, Inter, sans-serif',
+              fontWeight: 900,
+              letterSpacing: '5px',
+              color: '#00D2FF',
+              textShadow: '0 0 10px #00D2FF'
+            }}
             data-testid="text-broadcast-status"
           >
-            Broadcasting
+            Broadcasting Peace
           </span>
-          <Radio className="w-4 h-4 animate-indigo-pulse" />
+          <Radio className="w-4 h-4" style={{ color: '#00D2FF', filter: 'drop-shadow(0 0 5px #00D2FF)' }} />
         </div>
       </div>
     </div>
@@ -49,7 +56,17 @@ function PolicyHeader() {
             <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
             </div>
-            <span className="text-lg font-bold tracking-tight ether-white" style={{ fontFamily: 'Oxanium, sans-serif' }} data-testid="text-app-name">
+            <span 
+              className="text-lg uppercase"
+              style={{ 
+                fontFamily: 'Montserrat, Inter, sans-serif',
+                fontWeight: 900,
+                letterSpacing: '2px',
+                color: '#00D2FF',
+                textShadow: '0 0 8px #00D2FF'
+              }}
+              data-testid="text-app-name"
+            >
               The Digital Hearth
             </span>
           </div>
@@ -351,8 +368,14 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <h1 
-              className="text-3xl md:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
-              style={{ fontFamily: 'Oxanium, sans-serif', textShadow: '0 0 40px rgba(0, 210, 255, 0.3)' }}
+              className="text-3xl md:text-5xl mb-4 uppercase"
+              style={{ 
+                fontFamily: 'Montserrat, Inter, sans-serif', 
+                fontWeight: 900,
+                letterSpacing: '3px',
+                color: '#00D2FF',
+                textShadow: '0 0 10px #00D2FF, 0 0 30px rgba(0, 210, 255, 0.5)'
+              }}
               data-testid="text-main-title"
             >
               The Digital Hearth
