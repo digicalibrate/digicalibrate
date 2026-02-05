@@ -822,7 +822,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <div className="text-cyan-600/50">
-            © 2026 Digital Haven
+            © 2026 DigiCalibrate
           </div>
           
           <a 
