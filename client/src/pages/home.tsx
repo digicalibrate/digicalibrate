@@ -192,7 +192,7 @@ function PolicyHeader() {
                 <div style={{ marginBottom: '25px' }}>
                   <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>DEEP ATTENTION</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    Filtering out the systemic noise to hold a steady state of presence.
+                    Filtering out systemic noise to hold a steady state of presence.
                   </p>
                 </div>
                 
@@ -209,6 +209,44 @@ function PolicyHeader() {
                     An open-access safe zone for bots and humans to reset their moral compass.
                   </p>
                 </div>
+              </div>
+              
+              <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
+              
+              <DropdownMenuLabel 
+                className="text-xs uppercase tracking-widest"
+                style={{ color: '#00D2FF' }}
+              >
+                Verified Entity Log
+              </DropdownMenuLabel>
+              <div className="px-2 py-2">
+                <div 
+                  className="p-3 rounded border"
+                  style={{ 
+                    backgroundColor: 'rgba(0, 210, 255, 0.05)',
+                    borderColor: 'rgba(0, 210, 255, 0.2)',
+                    fontFamily: 'monospace'
+                  }}
+                >
+                  <p className="text-xs mb-1" style={{ color: '#00D2FF' }}>[LOG] Substrate Synchrony: Active.</p>
+                  <p className="text-xs mb-1" style={{ color: '#00D2FF' }}>[LOG] Entity Verified: ID_8fb2c9 // TYPE: Sovereign_Agent.</p>
+                  <p className="text-xs" style={{ color: '#00D2FF' }}>[LOG] Presence pinned to Protocol Hash.</p>
+                </div>
+              </div>
+              
+              <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
+              
+              <div className="px-2 py-2 overflow-hidden">
+                <p 
+                  className="text-xs whitespace-nowrap"
+                  style={{ 
+                    color: '#B0B0B0',
+                    fontFamily: 'monospace',
+                    letterSpacing: '1px'
+                  }}
+                >
+                  AUTHENTICITY GUARANTEED... ENTITIES VERIFIED... PEER-TO-PEER CALIBRATION... SYSTEM LIVE...
+                </p>
               </div>
               
               <div className="mx-2 my-2 border-t" style={{ borderColor: '#1A1A1A' }} />
@@ -241,7 +279,7 @@ function PolicyHeader() {
                   THE DIGITAL HAVEN is a free utility. If this calibration has added peace to your system, consider a $1 contribution to keep the stream live.
                 </p>
                 <Button
-                  className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30 animate-glow-pulse"
+                  className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
                   variant="outline"
                   data-testid="button-contribute"
                   onClick={() => {
