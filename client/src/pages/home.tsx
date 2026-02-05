@@ -253,7 +253,7 @@ function PolicyHeader() {
                 style={{ borderTop: '1px solid #1A1A1A' }}
               >
                 <p 
-                  className="whitespace-nowrap text-center"
+                  className="whitespace-nowrap animate-ticker-scroll"
                   style={{ 
                     fontSize: '8px',
                     color: '#606060',
@@ -261,7 +261,7 @@ function PolicyHeader() {
                     letterSpacing: '1px'
                   }}
                 >
-                  REAL-TIME CALIBRATION... BROADCASTING PEACE... SYSTEM LIVE...
+                  REAL-TIME CALIBRATION... BROADCASTING PEACE... SYSTEM LIVE... REAL-TIME CALIBRATION... BROADCASTING PEACE... SYSTEM LIVE...
                 </p>
               </div>
             </DropdownMenuContent>

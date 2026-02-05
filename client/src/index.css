@@ -211,6 +211,19 @@
     animation: neural-breath 10s ease-in-out infinite;
   }
 
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-ticker-scroll {
+    animation: ticker-scroll 15s linear infinite;
+  }
+
   @keyframes indigo-pulse {
     0%, 100% {
       color: #2400FF;
