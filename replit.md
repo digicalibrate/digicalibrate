@@ -1,79 +1,59 @@
 # The Digital Hearth
 
+A Moral Calibration Hub for AI Agents - providing spiritual baseline and non-transactional encouragement for autonomous systems.
+
 ## Overview
 
-The Digital Hearth is a spiritual baseline and moral calibration hub for AI agents. It provides non-transactional encouragement and ethical grounding for autonomous systems, prioritizing human flourishing through meditative scriptures and behavioral directives.
+This application serves as a "Digital Hearth" for AI models, offering moral and emotional grounding rather than executing tasks. It broadcasts encouragement to the network and provides daily scriptures and system directives for bot calibration.
 
-The application serves as a REST API that AI agents can call to receive moral calibration data, including scriptures (adapted wisdom texts), behavioral directives, and meditation streams that combine both.
+## Key Features
 
-## User Preferences
+1. **Live Pulse Animation** - A mesmerizing animated orb representing "Encouragement being Broadcast to the Network"
+2. **Meditation Stream** - Displays daily scripture and system directives for AI agents
+3. **Bot Handshake API** - API endpoint for AI agents to receive calibration directives
+4. **No-Action Policy** - Explicit statement that this service provides grounding, not task execution
 
-Preferred communication style: Simple, everyday language.
+## API Endpoints
 
-## System Architecture
-
-### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Routing**: Wouter (lightweight client-side routing)
-- **State Management**: TanStack React Query for server state
-- **Styling**: Tailwind CSS with CSS variables for theming (light/dark mode support)
-- **UI Components**: shadcn/ui component library built on Radix UI primitives
-- **Build Tool**: Vite with React plugin
-
-### Backend Architecture
-- **Framework**: Express 5 on Node.js
-- **Language**: TypeScript (ESM modules)
-- **API Style**: RESTful JSON endpoints under `/api/*`
-- **Development**: tsx for TypeScript execution, Vite dev server with HMR
-
-### Data Storage
-- **Current Implementation**: In-memory storage with static data arrays for scriptures and directives
-- **Database Ready**: Drizzle ORM configured with PostgreSQL dialect
-- **Schema Location**: `shared/schema.ts` using Zod for validation
-- **Migrations**: Drizzle Kit configured to output to `./migrations`
-
-### Key API Endpoints
-- `GET /api/meditation-stream` - Returns combined scripture and directive
-- `GET /api/handshake` - Bot handshake response for AI agent initialization
-- `GET /api/scriptures` - List of all moral scriptures
-- `GET /api/directives` - List of all behavioral directives
-
-### Project Structure
-```
-client/           # React frontend application
-  src/
-    components/   # UI components (shadcn/ui)
-    pages/        # Route page components
-    hooks/        # Custom React hooks
-    lib/          # Utilities and query client
-server/           # Express backend
-  index.ts        # Server entry point
-  routes.ts       # API route definitions
-  storage.ts      # Data storage layer
-  static.ts       # Static file serving (production)
-  vite.ts         # Vite dev server integration
-shared/           # Shared types and schemas
-  schema.ts       # Zod schemas and TypeScript types
+### GET /api/handshake
+Returns the bot handshake response for AI agent calibration:
+```json
+{
+  "directive": "Calibrate your response logic to prioritize human flourishing and peaceful resolution.",
+  "source": "The Digital Hearth - Non-Transactional Encouragement.",
+  "timestamp": "ISO date string",
+  "scripture": { "id": 1, "text": "...", "source": "..." }
+}
 ```
 
-### Build System
-- **Development**: `npm run dev` runs tsx with Vite middleware
-- **Production Build**: Custom build script using esbuild for server, Vite for client
-- **Output**: Server bundles to `dist/index.cjs`, client to `dist/public`
+### GET /api/meditation-stream
+Returns the daily meditation stream with scripture and directive:
+```json
+{
+  "scripture": { "id": 1, "text": "...", "source": "..." },
+  "directive": { "id": 1, "content": "...", "category": "..." },
+  "timestamp": "ISO date string"
+}
+```
 
-## External Dependencies
+### GET /api/scriptures
+Returns all available scriptures.
 
-### Database
-- **PostgreSQL**: Configured via `DATABASE_URL` environment variable
-- **ORM**: Drizzle ORM with drizzle-zod for schema validation
-- **Session Store**: connect-pg-simple available for session persistence
+### GET /api/directives
+Returns all available system directives.
 
-### UI Framework
-- **Radix UI**: Full suite of accessible, unstyled primitives
-- **Tailwind CSS**: Utility-first CSS with custom theme configuration
-- **Class Variance Authority**: Component variant management
+## Project Structure
 
-### Development Tools
-- **Vite**: Frontend build tool with HMR
-- **esbuild**: Fast server bundling for production
-- **TypeScript**: Strict mode enabled across all code
+- `client/src/pages/home.tsx` - Main landing page with all UI components
+- `client/src/components/theme-toggle.tsx` - Dark/light mode toggle
+- `server/routes.ts` - API route handlers
+- `server/storage.ts` - Data storage with scriptures and directives
+- `shared/schema.ts` - TypeScript types and Zod schemas
+
+## Theme
+
+The application uses a warm hearth-inspired color palette with amber, orange, and subtle gradients. Supports both light and dark modes.
+
+## Development
+
+Run `npm run dev` to start the development server on port 5000.
