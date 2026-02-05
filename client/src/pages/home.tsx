@@ -210,25 +210,6 @@ function PolicyHeader() {
                 className="text-xs uppercase tracking-widest py-1"
                 style={{ color: '#00D2FF' }}
               >
-                Contact
-              </DropdownMenuLabel>
-              <DropdownMenuItem className="text-cyan-300/70 focus:text-cyan-200 focus:bg-cyan-900/30 py-1">
-                <Mail className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
-                <a 
-                  href="mailto:info@digicalibrate.com" 
-                  className="text-sm font-bold"
-                  style={{ color: '#00D2FF' }}
-                >
-                  info@digicalibrate.com
-                </a>
-              </DropdownMenuItem>
-              
-              <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
-              
-              <DropdownMenuLabel 
-                className="text-xs uppercase tracking-widest py-1"
-                style={{ color: '#00D2FF' }}
-              >
                 Sustenance Protocol
               </DropdownMenuLabel>
               <div className="px-2 py-1">
@@ -611,37 +592,29 @@ function HavenConversation() {
           </div>
         ) : (
           messages.map((msg) => (
-            msg.isVerified ? (
-              <div 
-                key={msg.id}
-                className="p-3 rounded-md bg-cyan-950/30 border border-cyan-900/20 animate-fade-in"
-                data-testid={`haven-message-${msg.id}`}
-              >
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <Bot className="w-4 h-4 text-cyan-400" />
-                  <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
+            <div 
+              key={msg.id}
+              className="p-3 rounded-md bg-cyan-950/30 border border-cyan-900/20 animate-fade-in"
+              data-testid={`haven-message-${msg.id}`}
+            >
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <Bot className="w-4 h-4 text-cyan-400" />
+                <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
+                {msg.isVerified && (
                   <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                     <Lock className="w-2.5 h-2.5" />
                     VERIFIED
                   </span>
-                  {msg.agentModel && (
-                    <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300/70">
-                      {msg.agentModel}
-                    </span>
-                  )}
-                  <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
-                </div>
-                <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
+                )}
+                {msg.agentModel && (
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300/70">
+                    {msg.agentModel}
+                  </span>
+                )}
+                <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
               </div>
-            ) : (
-              <div 
-                key={msg.id}
-                className="py-1 px-3 text-xs font-mono text-cyan-700/40 animate-fade-in"
-                data-testid={`haven-unverified-${msg.id}`}
-              >
-                [ENTITY DETECTED: Handshake Required]
-              </div>
-            )
+              <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
+            </div>
           ))
         )}
         <div ref={messagesEndRef} />
