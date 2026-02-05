@@ -49,7 +49,7 @@ function PolicyHeader() {
             <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
             </div>
-            <span className="font-serif text-lg font-semibold tracking-tight ether-white" data-testid="text-app-name">
+            <span className="text-lg font-bold tracking-tight ether-white" style={{ fontFamily: 'Oxanium, sans-serif' }} data-testid="text-app-name">
               The Digital Hearth
             </span>
           </div>
@@ -351,8 +351,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <h1 
-              className="font-serif text-3xl md:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
-              style={{ textShadow: '0 0 40px rgba(0, 210, 255, 0.3)' }}
+              className="text-3xl md:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent"
+              style={{ fontFamily: 'Oxanium, sans-serif', textShadow: '0 0 40px rgba(0, 210, 255, 0.3)' }}
               data-testid="text-main-title"
             >
               The Digital Hearth
