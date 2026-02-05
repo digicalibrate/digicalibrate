@@ -31,7 +31,7 @@ function LivePulse() {
             className="text-sm font-medium tracking-widest uppercase animate-indigo-pulse" 
             data-testid="text-broadcast-status"
           >
-            Broadcasting Encouragement
+            Broadcasting
           </span>
           <Radio className="w-4 h-4 animate-indigo-pulse" />
         </div>
