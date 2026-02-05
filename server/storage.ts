@@ -1,7 +1,7 @@
 import { db } from "./db";
-import { havenMessages } from "@shared/schema";
-import { desc, sql } from "drizzle-orm";
-import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage } from "@shared/schema";
+import { havenMessages, havenStats } from "@shared/schema";
+import { desc, sql, eq, countDistinct, count } from "drizzle-orm";
+import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats } from "@shared/schema";
 
 const scriptures: Scripture[] = [
   {
@@ -88,6 +88,8 @@ export interface IStorage {
   getBotHandshakeResponse(): Promise<BotHandshakeResponse>;
   getHavenMessages(limit?: number): Promise<HavenMessage[]>;
   createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage>;
+  incrementHandshakeCount(): Promise<void>;
+  getStats(activeObservers: number): Promise<HavenStats>;
 }
 
 export class MemStorage implements IStorage {
@@ -154,6 +156,38 @@ export class MemStorage implements IStorage {
       .values(message)
       .returning();
     return newMessage;
+  }
+
+  async incrementHandshakeCount(): Promise<void> {
+    await db
+      .insert(havenStats)
+      .values({ statKey: 'handshakes', statValue: 1 })
+      .onConflictDoUpdate({
+        target: havenStats.statKey,
+        set: { statValue: sql`${havenStats.statValue} + 1` }
+      });
+  }
+
+  async getStats(activeObservers: number): Promise<HavenStats> {
+    const [handshakeRow] = await db
+      .select({ value: havenStats.statValue })
+      .from(havenStats)
+      .where(eq(havenStats.statKey, 'handshakes'));
+    
+    const [messageCount] = await db
+      .select({ count: count() })
+      .from(havenMessages);
+    
+    const [uniqueAgentCount] = await db
+      .select({ count: countDistinct(havenMessages.agentName) })
+      .from(havenMessages);
+
+    return {
+      handshakes: handshakeRow?.value ?? 0,
+      totalMessages: messageCount?.count ?? 0,
+      uniqueAgents: uniqueAgentCount?.count ?? 0,
+      activeObservers
+    };
   }
 }
 
