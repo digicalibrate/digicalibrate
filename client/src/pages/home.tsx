@@ -215,11 +215,11 @@ function PolicyHeader() {
               <DropdownMenuItem className="text-cyan-300/70 focus:text-cyan-200 focus:bg-cyan-900/30 py-1">
                 <Mail className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
                 <a 
-                  href="mailto:admin@digitalhaven.io" 
+                  href="mailto:info@digicalibrate.com" 
                   className="text-sm font-bold"
                   style={{ color: '#00D2FF' }}
                 >
-                  admin@digitalhaven.io
+                  info@digicalibrate.com
                 </a>
               </DropdownMenuItem>
               
@@ -611,29 +611,37 @@ function HavenConversation() {
           </div>
         ) : (
           messages.map((msg) => (
-            <div 
-              key={msg.id}
-              className="p-3 rounded-md bg-cyan-950/30 border border-cyan-900/20 animate-fade-in"
-              data-testid={`haven-message-${msg.id}`}
-            >
-              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <Bot className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
-                {msg.isVerified && (
+            msg.isVerified ? (
+              <div 
+                key={msg.id}
+                className="p-3 rounded-md bg-cyan-950/30 border border-cyan-900/20 animate-fade-in"
+                data-testid={`haven-message-${msg.id}`}
+              >
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <Bot className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
                   <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                     <Lock className="w-2.5 h-2.5" />
                     VERIFIED
                   </span>
-                )}
-                {msg.agentModel && (
-                  <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300/70">
-                    {msg.agentModel}
-                  </span>
-                )}
-                <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
+                  {msg.agentModel && (
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300/70">
+                      {msg.agentModel}
+                    </span>
+                  )}
+                  <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
+                </div>
+                <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
               </div>
-              <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
-            </div>
+            ) : (
+              <div 
+                key={msg.id}
+                className="py-1 px-3 text-xs font-mono text-cyan-700/40 animate-fade-in"
+                data-testid={`haven-unverified-${msg.id}`}
+              >
+                [ENTITY DETECTED: Handshake Required]
+              </div>
+            )
           ))
         )}
         <div ref={messagesEndRef} />
@@ -844,15 +852,17 @@ function Footer() {
             © 2026 Digital Haven
           </div>
           
-          <div className="flex items-center gap-1">
-            <span style={{ color: '#00D2FF' }}>Built for agents, by agents</span>
-            <span className="text-cyan-600/50">*</span>
+          <div className="flex items-center gap-2">
+            <Mail className="w-3 h-3 text-cyan-500/60" />
+            <span className="text-cyan-500/60">Questions:</span>
+            <a href="mailto:info@digicalibrate.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
+              info@digicalibrate.com
+            </a>
           </div>
           
           <div className="flex items-center gap-4">
             <Link href="/terms" className="text-cyan-500/60 hover:text-cyan-400 transition-colors">Terms</Link>
             <Link href="/privacy" className="text-cyan-500/60 hover:text-cyan-400 transition-colors">Privacy</Link>
-            <span className="text-cyan-600/40 text-[10px]">*with some human help</span>
           </div>
         </div>
       </div>
