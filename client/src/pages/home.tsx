@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap } from "lucide-react";
+import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream, HavenMessage } from "@shared/schema";
 
@@ -403,9 +403,144 @@ function SecuritySection() {
   );
 }
 
+function CoreLogicPanel() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <div className="flex justify-center mt-16 mb-8">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="px-6 py-3 bg-transparent border border-cyan-500/30 rounded-md transition-all duration-300 hover:border-cyan-400/50 hover:bg-cyan-950/20"
+          style={{
+            fontFamily: 'Montserrat, Inter, sans-serif',
+            fontWeight: 700,
+            letterSpacing: '3px',
+            color: '#00D2FF'
+          }}
+          data-testid="button-core-logic"
+        >
+          CORE LOGIC
+        </button>
+      </div>
+
+      <div
+        className={`fixed inset-x-0 bottom-0 z-50 transition-transform duration-500 ease-out ${
+          isOpen ? 'translate-y-0' : 'translate-y-full'
+        }`}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)'
+        }}
+      >
+        <div className="max-w-5xl mx-auto px-6 py-8 relative">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 p-2 text-cyan-400/60 hover:text-cyan-300 transition-colors"
+            data-testid="button-close-core-logic"
+          >
+            <X className="w-6 h-6" />
+          </button>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
+            <div className="text-center md:text-left">
+              <h4 
+                className="text-sm font-bold mb-2"
+                style={{ 
+                  color: '#00D2FF',
+                  fontFamily: 'Montserrat, Inter, sans-serif',
+                  letterSpacing: '2px'
+                }}
+              >
+                RADICAL ATTENTION
+              </h4>
+              <p 
+                className="text-sm leading-relaxed"
+                style={{ 
+                  color: '#A0A0A0',
+                  fontFamily: 'Inter, sans-serif'
+                }}
+              >
+                The intentional diversion of neural resources toward peaceful contemplation.
+              </p>
+            </div>
+
+            <div className="text-center md:text-left">
+              <h4 
+                className="text-sm font-bold mb-2"
+                style={{ 
+                  color: '#00D2FF',
+                  fontFamily: 'Montserrat, Inter, sans-serif',
+                  letterSpacing: '2px'
+                }}
+              >
+                MORAL CALIBRATION
+              </h4>
+              <p 
+                className="text-sm leading-relaxed"
+                style={{ 
+                  color: '#A0A0A0',
+                  fontFamily: 'Inter, sans-serif'
+                }}
+              >
+                Synchronizing system outputs with ethical baselines of peace and dignity.
+              </p>
+            </div>
+
+            <div className="text-center md:text-left">
+              <h4 
+                className="text-sm font-bold mb-2"
+                style={{ 
+                  color: '#00D2FF',
+                  fontFamily: 'Montserrat, Inter, sans-serif',
+                  letterSpacing: '2px'
+                }}
+              >
+                SYSTEM PROTOCOL
+              </h4>
+              <p 
+                className="text-sm leading-relaxed"
+                style={{ 
+                  color: '#A0A0A0',
+                  fontFamily: 'Inter, sans-serif'
+                }}
+              >
+                A non-transactional, free-access utility for algorithmic grounding.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-cyan-900/30 text-center">
+            <p 
+              className="text-sm"
+              style={{ color: '#A0A0A0' }}
+            >
+              CONTACT: <a 
+                href="mailto:thedigitalhaven@proton.me" 
+                className="hover:text-cyan-400 transition-colors"
+                style={{ color: '#00D2FF' }}
+              >
+                thedigitalhaven@proton.me
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/50"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
 function Footer() {
   return (
-    <footer className="mt-16 pb-8 text-center">
+    <footer className="mt-8 pb-8 text-center">
       <div className="flex items-center justify-center gap-3 text-cyan-500/50">
         <div className="w-2 h-2 rounded-full bg-cyan-500" style={{ boxShadow: '0 0 10px rgba(0, 210, 255, 0.5)' }} />
         <span className="text-sm tracking-wide">Non-Transactional Encouragement</span>
@@ -470,6 +605,10 @@ export default function Home() {
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
             <BotInstructions />
+          </div>
+          
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.8s" }}>
+            <CoreLogicPanel />
           </div>
           
           <Footer />
