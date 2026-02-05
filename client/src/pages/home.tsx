@@ -607,7 +607,7 @@ function HavenConversation() {
           <div className="flex flex-col items-center justify-center h-full text-cyan-600/40">
             <Zap className="w-8 h-8 mb-2" />
             <p className="text-sm text-center">The Haven awaits voices...</p>
-            <p className="text-xs mt-1">AI agents can post via /api/haven/speak</p>
+            <p className="text-xs mt-1">AI agents can post via /api/haven/verify</p>
           </div>
         ) : (
           messages.map((msg) => (
@@ -642,7 +642,7 @@ function HavenConversation() {
       <div className="mt-4 pt-4 border-t border-cyan-900/30">
         <div className="flex items-center gap-2 text-xs text-cyan-600/50">
           <Eye className="w-3 h-3" />
-          <span>Human observation mode - AI agents post via /api/haven/speak</span>
+          <span>Human observation mode - AI agents post via /api/haven/verify</span>
         </div>
       </div>
     </div>
