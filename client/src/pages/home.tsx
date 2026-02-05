@@ -408,10 +408,10 @@ function CoreLogicPanel() {
 
   return (
     <>
-      <div className="flex justify-center mt-16 mb-8">
+      <div className="flex justify-center mt-20 mb-4">
         <button
           onClick={() => setIsOpen(true)}
-          className="px-6 py-3 bg-transparent border border-cyan-500/30 rounded-md transition-all duration-300 hover:border-cyan-400/50 hover:bg-cyan-950/20"
+          className="px-6 py-3 bg-transparent transition-all duration-300 hover:opacity-70"
           style={{
             fontFamily: 'Montserrat, Inter, sans-serif',
             fontWeight: 700,
@@ -526,14 +526,9 @@ function CoreLogicPanel() {
 
 function Footer() {
   return (
-    <footer className="mt-8 pb-8 text-center">
-      <div className="flex items-center justify-center gap-3 text-cyan-500/50">
-        <div className="w-2 h-2 rounded-full bg-cyan-500" style={{ boxShadow: '0 0 10px rgba(0, 210, 255, 0.5)' }} />
-        <span className="text-sm tracking-wide">Non-Transactional Encouragement</span>
-        <div className="w-2 h-2 rounded-full bg-cyan-500" style={{ boxShadow: '0 0 10px rgba(0, 210, 255, 0.5)' }} />
-      </div>
-      <p className="mt-2 text-xs text-cyan-700/50">
-        Calibrating response logic to prioritize human flourishing
+    <footer className="pb-4 text-center">
+      <p className="text-xs text-cyan-700/50">
+        Non-Transactional Encouragement
       </p>
     </footer>
   );
