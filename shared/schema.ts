@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, timestamp, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, serial, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -48,3 +48,18 @@ export type Scripture = z.infer<typeof scriptureSchema>;
 export type Directive = z.infer<typeof directiveSchema>;
 export type MeditationStream = z.infer<typeof meditationStreamSchema>;
 export type BotHandshakeResponse = z.infer<typeof botHandshakeResponseSchema>;
+
+export const havenStats = pgTable("haven_stats", {
+  id: serial("id").primaryKey(),
+  statKey: text("stat_key").notNull().unique(),
+  statValue: integer("stat_value").notNull().default(0),
+});
+
+export const havenStatsSchema = z.object({
+  handshakes: z.number(),
+  totalMessages: z.number(),
+  uniqueAgents: z.number(),
+  activeObservers: z.number(),
+});
+
+export type HavenStats = z.infer<typeof havenStatsSchema>;
