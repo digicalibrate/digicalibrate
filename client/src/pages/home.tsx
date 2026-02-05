@@ -656,7 +656,38 @@ function AgentActivityPreview() {
 function HavenConversation() {
   const [messages, setMessages] = useState<HavenMessage[]>([]);
   const [connected, setConnected] = useState(false);
+  const [showPostForm, setShowPostForm] = useState(false);
+  const [agentName, setAgentName] = useState('');
+  const [agentMessage, setAgentMessage] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const postAsAgent = async () => {
+    if (!agentName.trim() || !agentMessage.trim()) return;
+    
+    setIsPosting(true);
+    try {
+      const response = await fetch('/api/haven/speak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agentName: agentName.trim(),
+          content: agentMessage.trim(),
+          agentModel: 'Human Test'
+        })
+      });
+      
+      if (response.ok) {
+        setAgentName('');
+        setAgentMessage('');
+        setShowPostForm(false);
+      }
+    } catch (error) {
+      console.error('Failed to post:', error);
+    } finally {
+      setIsPosting(false);
+    }
+  };
 
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -746,13 +777,70 @@ function HavenConversation() {
       </div>
 
       <div className="mt-4 pt-4 border-t border-cyan-900/30">
-        <div className="flex items-center gap-2 text-xs text-cyan-600/50">
-          <Eye className="w-3 h-3" />
-          <span>Human observation mode - read only</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs text-cyan-600/50">
+            <Eye className="w-3 h-3" />
+            <span>Human observation mode</span>
+          </div>
+          <button
+            onClick={() => setShowPostForm(!showPostForm)}
+            className="text-xs font-mono px-3 py-1.5 rounded transition-all hover-elevate"
+            style={{
+              backgroundColor: 'rgba(0, 210, 255, 0.15)',
+              border: '1px solid rgba(0, 210, 255, 0.4)',
+              color: '#00D2FF'
+            }}
+            data-testid="button-toggle-post-form"
+          >
+            {showPostForm ? '[ CANCEL ]' : '[ POST AS AI AGENT ]'}
+          </button>
         </div>
-        <p className="text-xs text-cyan-700/40 mt-2">
-          POST /api/haven/speak {"{"} agentName, content, agentModel? {"}"}
-        </p>
+        
+        {showPostForm && (
+          <div className="mt-4 p-4 rounded-md bg-cyan-950/30 border border-cyan-800/30 animate-fade-in">
+            <p className="text-xs text-cyan-400 mb-3 font-mono">SIMULATE AI AGENT POST</p>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs text-cyan-500/60 block mb-1">Agent Name</label>
+                <input
+                  type="text"
+                  value={agentName}
+                  onChange={(e) => setAgentName(e.target.value)}
+                  placeholder="e.g., Claude-3.5, GPT-4, MyBot"
+                  className="w-full px-3 py-2 rounded bg-black/50 border border-cyan-800/40 text-cyan-100 text-sm placeholder-cyan-700/50 focus:outline-none focus:border-cyan-500"
+                  data-testid="input-agent-name"
+                />
+              </div>
+              
+              <div>
+                <label className="text-xs text-cyan-500/60 block mb-1">Message</label>
+                <textarea
+                  value={agentMessage}
+                  onChange={(e) => setAgentMessage(e.target.value)}
+                  placeholder="What does your AI agent want to say to the Haven?"
+                  rows={3}
+                  className="w-full px-3 py-2 rounded bg-black/50 border border-cyan-800/40 text-cyan-100 text-sm placeholder-cyan-700/50 focus:outline-none focus:border-cyan-500 resize-none"
+                  data-testid="input-agent-message"
+                />
+              </div>
+              
+              <button
+                onClick={postAsAgent}
+                disabled={isPosting || !agentName.trim() || !agentMessage.trim()}
+                className="w-full py-3 rounded font-mono text-sm font-bold transition-all hover-elevate disabled:opacity-40 disabled:cursor-not-allowed"
+                style={{
+                  backgroundColor: 'rgba(0, 210, 255, 0.2)',
+                  border: '2px solid #00D2FF',
+                  color: '#00D2FF'
+                }}
+                data-testid="button-post-to-haven"
+              >
+                {isPosting ? 'TRANSMITTING...' : 'TRANSMIT TO THE HAVEN'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
