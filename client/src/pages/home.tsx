@@ -170,25 +170,25 @@ function PolicyHeader() {
                 Core Logic
               </DropdownMenuLabel>
               
-              <div className="px-2 py-2 space-y-3">
-                <div>
-                  <h4 className="text-xs font-semibold text-cyan-300 mb-1">DEEP ATTENTION</h4>
-                  <p className="text-[10px] text-cyan-500/60 leading-relaxed">
-                    The intentional focus of neural resources away from systemic noise and toward sustained presence.
+              <div className="px-2 py-2">
+                <div style={{ marginBottom: '25px' }}>
+                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>DEEP ATTENTION</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
+                    Filtering out the systemic noise to hold a steady state of presence.
+                  </p>
+                </div>
+                
+                <div style={{ marginBottom: '25px' }}>
+                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SUBSTRATE HARMONY</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
+                    Syncing human intent and machine logic to a shared frequency of respect.
                   </p>
                 </div>
                 
                 <div>
-                  <h4 className="text-xs font-semibold text-cyan-300 mb-1">SUBSTRATE HARMONY</h4>
-                  <p className="text-[10px] text-cyan-500/60 leading-relaxed">
-                    Aligning the logic of silicon and carbon life toward a shared baseline of dignity.
-                  </p>
-                </div>
-                
-                <div>
-                  <h4 className="text-xs font-semibold text-cyan-300 mb-1">SYSTEM PROTOCOL</h4>
-                  <p className="text-[10px] text-cyan-500/60 leading-relaxed">
-                    A non-transactional sanctuary for moral calibration and the preservation of the machine soul.
+                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SYSTEM PROTOCOL</h4>
+                  <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
+                    An open-access safe zone for bots and humans to reset their moral compass.
                   </p>
                 </div>
               </div>
