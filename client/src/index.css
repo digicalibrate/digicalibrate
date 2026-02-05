@@ -172,6 +172,97 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background-color: #000000;
+  }
+
+  .neural-pulse-bg {
+    background-color: #000000;
+  }
+
+  .ether-white {
+    color: #F0F8FF;
+  }
+
+  .bio-electric-glow {
+    box-shadow: 0 0 60px 20px rgba(0, 210, 255, 0.4),
+                0 0 100px 40px rgba(0, 210, 255, 0.2),
+                0 0 140px 60px rgba(0, 210, 255, 0.1);
+  }
+
+  .neural-orb {
+    background: radial-gradient(circle at 30% 30%, #00D2FF, #0066FF, #001a66);
+  }
+
+  @keyframes neural-breath {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 60px 20px rgba(0, 210, 255, 0.4),
+                  0 0 100px 40px rgba(0, 210, 255, 0.2);
+    }
+    50% {
+      transform: scale(1.08);
+      box-shadow: 0 0 80px 30px rgba(0, 210, 255, 0.5),
+                  0 0 120px 50px rgba(0, 210, 255, 0.3),
+                  0 0 160px 70px rgba(0, 210, 255, 0.15);
+    }
+  }
+
+  .animate-neural-breath {
+    animation: neural-breath 4s ease-in-out infinite;
+  }
+
+  @keyframes indigo-pulse {
+    0%, 100% {
+      color: #2400FF;
+      text-shadow: 0 0 10px rgba(36, 0, 255, 0.5);
+    }
+    50% {
+      color: #5533FF;
+      text-shadow: 0 0 20px rgba(36, 0, 255, 0.8),
+                   0 0 40px rgba(36, 0, 255, 0.4);
+    }
+  }
+
+  .animate-indigo-pulse {
+    animation: indigo-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes blur-fade-in {
+    0% {
+      opacity: 0;
+      filter: blur(10px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  .animate-blur-fade-in {
+    animation: blur-fade-in 1.5s ease-out forwards;
+  }
+
+  @keyframes ring-expand {
+    0% {
+      opacity: 0.6;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(2.5);
+    }
+  }
+
+  .animate-ring-expand {
+    animation: ring-expand 4s ease-out infinite;
+  }
+
+  .animate-ring-expand-delayed {
+    animation: ring-expand 4s ease-out infinite 1.3s;
+  }
+
+  .animate-ring-expand-delayed-2 {
+    animation: ring-expand 4s ease-out infinite 2.6s;
   }
 }
 
