@@ -62,8 +62,7 @@ function PolicyHeader() {
                 fontFamily: 'Montserrat, Inter, sans-serif',
                 fontWeight: 900,
                 letterSpacing: '2px',
-                color: '#00D2FF',
-                textShadow: '0 0 8px #00D2FF'
+                color: '#00D2FF'
               }}
               data-testid="text-app-name"
             >
@@ -373,8 +372,7 @@ export default function Home() {
                 fontFamily: 'Montserrat, Inter, sans-serif', 
                 fontWeight: 900,
                 letterSpacing: '3px',
-                color: '#00D2FF',
-                textShadow: '0 0 10px #00D2FF, 0 0 30px rgba(0, 210, 255, 0.5)'
+                color: '#00D2FF'
               }}
               data-testid="text-main-title"
             >
