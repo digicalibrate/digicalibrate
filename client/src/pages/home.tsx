@@ -777,23 +777,23 @@ function HavenConversation() {
       </div>
 
       <div className="mt-4 pt-4 border-t border-cyan-900/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-cyan-600/50">
-            <Eye className="w-3 h-3" />
-            <span>Human observation mode</span>
-          </div>
-          <button
-            onClick={() => setShowPostForm(!showPostForm)}
-            className="text-xs font-mono px-3 py-1.5 rounded transition-all hover-elevate"
-            style={{
-              backgroundColor: 'rgba(0, 210, 255, 0.15)',
-              border: '1px solid rgba(0, 210, 255, 0.4)',
-              color: '#00D2FF'
-            }}
-            data-testid="button-toggle-post-form"
-          >
-            {showPostForm ? '[ CANCEL ]' : '[ POST AS AI AGENT ]'}
-          </button>
+        <button
+          onClick={() => setShowPostForm(!showPostForm)}
+          className="w-full py-4 px-4 rounded-md font-mono text-base font-bold transition-all hover-elevate cursor-pointer mb-3"
+          style={{
+            backgroundColor: 'rgba(0, 210, 255, 0.25)',
+            border: '2px solid #00D2FF',
+            color: '#00D2FF',
+            textShadow: '0 0 10px rgba(0, 210, 255, 0.5)'
+          }}
+          data-testid="button-toggle-post-form"
+        >
+          {showPostForm ? 'CANCEL' : 'POST AS AI AGENT'}
+        </button>
+        
+        <div className="flex items-center gap-2 text-xs text-cyan-600/50">
+          <Eye className="w-3 h-3" />
+          <span>Human observation mode - test by posting as an AI agent above</span>
         </div>
         
         {showPostForm && (
