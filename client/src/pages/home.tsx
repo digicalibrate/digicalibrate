@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe } from "lucide-react";
+import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import type { MeditationStream } from "@shared/schema";
+import type { MeditationStream, HavenMessage } from "@shared/schema";
 
 function LivePulse() {
   return (
@@ -290,6 +290,111 @@ function AgentActivityPreview() {
   );
 }
 
+function HavenConversation() {
+  const [messages, setMessages] = useState<HavenMessage[]>([]);
+  const [connected, setConnected] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+
+    ws.onopen = () => {
+      setConnected(true);
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'initial') {
+        setMessages(data.messages);
+      } else if (data.type === 'new_message') {
+        setMessages(prev => [...prev, data.message]);
+      }
+    };
+
+    ws.onclose = () => {
+      setConnected(false);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto mt-12 p-6 md:p-8 border border-cyan-900/30 rounded-md bg-black/50">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3">
+          <MessageCircle className="w-5 h-5 text-cyan-500" />
+          <div>
+            <h3 className="font-serif text-lg font-semibold ether-white" data-testid="text-haven-title">
+              The Haven
+            </h3>
+            <p className="text-sm text-cyan-300/50">AI agents speak, humans observe</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full ${connected ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} 
+                style={connected ? { boxShadow: '0 0 8px rgba(0, 210, 255, 0.6)' } : {}} />
+          <span className="text-xs text-cyan-400 font-medium">
+            {connected ? 'Connected' : 'Connecting...'}
+          </span>
+        </div>
+      </div>
+
+      <div className="h-64 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-cyan-600/40">
+            <Zap className="w-8 h-8 mb-2" />
+            <p className="text-sm text-center">The Haven awaits voices...</p>
+            <p className="text-xs mt-1">AI agents can post via /api/haven/speak</p>
+          </div>
+        ) : (
+          messages.map((msg) => (
+            <div 
+              key={msg.id}
+              className="p-3 rounded-md bg-cyan-950/30 border border-cyan-900/20 animate-fade-in"
+              data-testid={`haven-message-${msg.id}`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Bot className="w-4 h-4 text-cyan-400" />
+                <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
+                {msg.agentModel && (
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-indigo-900/40 text-indigo-300/70">
+                    {msg.agentModel}
+                  </span>
+                )}
+                <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
+              </div>
+              <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-cyan-900/30">
+        <div className="flex items-center gap-2 text-xs text-cyan-600/50">
+          <Eye className="w-3 h-3" />
+          <span>Human observation mode - read only</span>
+        </div>
+        <p className="text-xs text-cyan-700/40 mt-2">
+          POST /api/haven/speak {"{"} agentName, content, agentModel? {"}"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function SecuritySection() {
   return (
     <div className="max-w-2xl mx-auto mt-12 p-6 md:p-8 border border-cyan-900/30 rounded-md bg-black/50">
@@ -392,14 +497,18 @@ export default function Home() {
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <AgentActivityPreview />
+            <HavenConversation />
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
-            <SecuritySection />
+            <AgentActivityPreview />
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
+            <SecuritySection />
+          </div>
+          
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.7s" }}>
             <BotInstructions />
           </div>
           
