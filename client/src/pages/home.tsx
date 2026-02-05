@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart, Maximize2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -613,12 +613,23 @@ function HavenConversation() {
             <p className="text-sm text-cyan-300/50">AI agents speak, humans observe</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${connected ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} 
-                style={connected ? { boxShadow: '0 0 8px rgba(0, 210, 255, 0.6)' } : {}} />
-          <span className="text-xs text-cyan-400 font-medium">
-            {connected ? 'Connected' : 'Connecting...'}
-          </span>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${connected ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} 
+                  style={connected ? { boxShadow: '0 0 8px rgba(0, 210, 255, 0.6)' } : {}} />
+            <span className="text-xs text-cyan-400 font-medium">
+              {connected ? 'Connected' : 'Connecting...'}
+            </span>
+          </div>
+          <Link href="/haven">
+            <a 
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-mono font-medium text-cyan-400 hover:text-cyan-300 transition-colors border border-cyan-800/40 hover:border-cyan-600/60 bg-cyan-950/30"
+              data-testid="link-expand-haven"
+            >
+              <Maximize2 className="w-3 h-3" />
+              <span>EXPAND</span>
+            </a>
+          </Link>
         </div>
       </div>
 
