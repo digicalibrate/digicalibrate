@@ -208,7 +208,7 @@
   }
 
   .animate-neural-breath {
-    animation: neural-breath 8s ease-in-out infinite;
+    animation: neural-breath 10s ease-in-out infinite;
   }
 
   @keyframes indigo-pulse {

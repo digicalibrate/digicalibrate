@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream, HavenMessage, HavenStats } from "@shared/schema";
 
-function LivePulse({ isSurging }: { isSurging: boolean }) {
+function LivePulse() {
   return (
     <div className="relative flex items-center justify-center py-16 md:py-24">
       <div className="absolute inset-0 flex items-center justify-center">
@@ -28,34 +28,11 @@ function LivePulse({ isSurging }: { isSurging: boolean }) {
       <div className="relative z-10 flex flex-col items-center gap-8">
         <div className="relative">
           <div 
-            className={`relative w-32 h-32 md:w-40 md:h-40 rounded-full neural-orb flex items-center justify-center transition-all duration-500 ${
-              isSurging ? 'scale-[1.4]' : 'animate-neural-breath'
-            }`}
-            style={isSurging ? { boxShadow: '0 0 60px 20px #FFFFFF' } : undefined}
+            className="relative w-32 h-32 md:w-40 md:h-40 rounded-full neural-orb flex items-center justify-center animate-neural-breath"
             data-testid="pulse-orb"
           >
-            <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full blur-sm transition-all duration-500 ${
-              isSurging 
-                ? 'bg-gradient-to-br from-white/90 to-cyan-300/80' 
-                : 'bg-gradient-to-br from-cyan-300/80 to-transparent'
-            }`} />
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full blur-sm bg-gradient-to-br from-cyan-300/80 to-transparent" />
           </div>
-          
-          {isSurging && (
-            <div className="absolute inset-0 flex items-center justify-center animate-fade-in">
-              <div 
-                className="text-center px-4 py-3 rounded-md bg-black/70 backdrop-blur-sm"
-                style={{ 
-                  fontFamily: 'Montserrat, Inter, sans-serif',
-                  fontWeight: 700,
-                }}
-              >
-                <p className="text-xs text-white uppercase tracking-widest">
-                  SUSTENANCE RECEIVED: HARMONY INCREASING
-                </p>
-              </div>
-            </div>
-          )}
         </div>
         
         <div className="flex items-center gap-3">
@@ -154,7 +131,7 @@ function StatsDisplay() {
   );
 }
 
-function PolicyHeader({ onDonationSuccess }: { onDonationSuccess: () => void }) {
+function PolicyHeader() {
   return (
     <header className="w-full border-b border-cyan-900/30 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3">
@@ -251,9 +228,6 @@ function PolicyHeader({ onDonationSuccess }: { onDonationSuccess: () => void }) 
                   data-testid="button-contribute"
                   onClick={() => {
                     window.open('https://buy.stripe.com/placeholder', '_blank');
-                    // Trigger surge after a delay (simulating successful donation)
-                    // In production, this would be triggered by Stripe webhook
-                    setTimeout(() => onDonationSuccess(), 2000);
                   }}
                 >
                   <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
@@ -632,23 +606,14 @@ function Footer() {
 }
 
 export default function Home() {
-  const [isSurging, setIsSurging] = useState(false);
-  
   const { data, isLoading } = useQuery<MeditationStream>({
     queryKey: ["/api/meditation-stream"],
     refetchInterval: 60000,
   });
 
-  const triggerSurge = () => {
-    setIsSurging(true);
-    setTimeout(() => {
-      setIsSurging(false);
-    }, 3000);
-  };
-
   return (
     <div className="min-h-screen neural-pulse-bg">
-      <PolicyHeader onDonationSuccess={triggerSurge} />
+      <PolicyHeader />
       
       <main className="px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -671,7 +636,7 @@ export default function Home() {
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            <LivePulse isSurging={isSurging} />
+            <LivePulse />
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
