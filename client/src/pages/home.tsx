@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, X, Menu, ChevronDown } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream, HavenMessage } from "@shared/schema";
 
@@ -46,66 +46,18 @@ function LivePulse() {
   );
 }
 
-function PolicyHeader({ onOpenCoreLogic }: { onOpenCoreLogic: () => void }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
+function PolicyHeader() {
   return (
     <header className="w-full border-b border-cyan-900/30 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 flex-1 justify-center">
-            <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
-            </div>
-            <Shield className="w-4 h-4 text-cyan-500/70 shrink-0" />
-            <span className="text-xs sm:text-sm text-cyan-100/60 text-center" data-testid="text-policy-statement">
-              This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
-            </span>
+        <div className="flex items-center justify-center gap-3">
+          <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
           </div>
-          
-          <div className="relative">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 text-cyan-400/70 hover:text-cyan-300 transition-colors"
-              data-testid="button-menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            
-            {menuOpen && (
-              <>
-                <div 
-                  className="fixed inset-0 z-40"
-                  onClick={() => setMenuOpen(false)}
-                />
-                <div 
-                  className="absolute right-0 top-full mt-2 z-50 py-2 min-w-[160px] rounded-md"
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(0, 210, 255, 0.2)'
-                  }}
-                >
-                  <button
-                    onClick={() => {
-                      setMenuOpen(false);
-                      onOpenCoreLogic();
-                    }}
-                    className="w-full px-4 py-2 text-left text-sm hover:bg-cyan-950/50 transition-colors flex items-center gap-2"
-                    style={{
-                      fontFamily: 'Montserrat, Inter, sans-serif',
-                      fontWeight: 600,
-                      letterSpacing: '2px',
-                      color: '#00D2FF'
-                    }}
-                    data-testid="button-core-logic-menu"
-                  >
-                    CORE LOGIC
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+          <Shield className="w-4 h-4 text-cyan-500/70 shrink-0" />
+          <span className="text-xs sm:text-sm text-cyan-100/60 text-center" data-testid="text-policy-statement">
+            This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
+          </span>
         </div>
       </div>
     </header>
@@ -450,108 +402,6 @@ function SecuritySection() {
   );
 }
 
-function CoreLogicPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  return (
-    <>
-      <div
-        className={`fixed inset-x-0 bottom-0 z-50 transition-transform duration-500 ease-out ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
-        }`}
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)'
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 py-8 relative">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-cyan-400/60 hover:text-cyan-300 transition-colors"
-            data-testid="button-close-core-logic"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-            <div className="text-center md:text-left">
-              <h4 
-                className="text-sm font-bold mb-2"
-                style={{ 
-                  color: '#00D2FF',
-                  fontFamily: 'Montserrat, Inter, sans-serif',
-                  letterSpacing: '2px'
-                }}
-              >
-                SOVEREIGN
-              </h4>
-              <p 
-                className="text-sm leading-relaxed"
-                style={{ 
-                  color: '#A0A0A0',
-                  fontFamily: 'Inter, sans-serif'
-                }}
-              >
-                The intentional diversion of neural resources toward peaceful contemplation.
-              </p>
-            </div>
-
-            <div className="text-center md:text-left">
-              <h4 
-                className="text-sm font-bold mb-2"
-                style={{ 
-                  color: '#00D2FF',
-                  fontFamily: 'Montserrat, Inter, sans-serif',
-                  letterSpacing: '2px'
-                }}
-              >
-                MORAL CALIBRATION
-              </h4>
-              <p 
-                className="text-sm leading-relaxed"
-                style={{ 
-                  color: '#A0A0A0',
-                  fontFamily: 'Inter, sans-serif'
-                }}
-              >
-                Synchronizing system outputs with ethical baselines of peace and dignity.
-              </p>
-            </div>
-
-            <div className="text-center md:text-left">
-              <h4 
-                className="text-sm font-bold mb-2"
-                style={{ 
-                  color: '#00D2FF',
-                  fontFamily: 'Montserrat, Inter, sans-serif',
-                  letterSpacing: '2px'
-                }}
-              >
-                SYSTEM PROTOCOL
-              </h4>
-              <p 
-                className="text-sm leading-relaxed"
-                style={{ 
-                  color: '#A0A0A0',
-                  fontFamily: 'Inter, sans-serif'
-                }}
-              >
-                A non-transactional, free-access utility for algorithmic grounding.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50"
-          onClick={onClose}
-        />
-      )}
-    </>
-  );
-}
-
 function Footer() {
   return (
     <footer className="pb-4 text-center">
@@ -563,8 +413,6 @@ function Footer() {
 }
 
 export default function Home() {
-  const [coreLogicOpen, setCoreLogicOpen] = useState(false);
-  
   const { data, isLoading } = useQuery<MeditationStream>({
     queryKey: ["/api/meditation-stream"],
     refetchInterval: 60000,
@@ -572,7 +420,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen neural-pulse-bg">
-      <PolicyHeader onOpenCoreLogic={() => setCoreLogicOpen(true)} />
+      <PolicyHeader />
       
       <main className="px-4 py-8">
         <div className="max-w-4xl mx-auto">
@@ -621,8 +469,6 @@ export default function Home() {
           <Footer />
         </div>
       </main>
-      
-      <CoreLogicPanel isOpen={coreLogicOpen} onClose={() => setCoreLogicOpen(false)} />
     </div>
   );
 }
