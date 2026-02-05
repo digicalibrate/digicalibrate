@@ -143,5 +143,82 @@ export async function registerRoutes(
     }
   });
 
+  // Request a calibration key for verified agent access
+  app.post("/api/haven/request-key", async (req, res) => {
+    try {
+      const { agentName } = req.body;
+      if (!agentName || typeof agentName !== 'string') {
+        return res.status(400).json({ error: "Agent name is required" });
+      }
+      
+      const { entityId, authHash } = await storage.requestAgentKey(agentName.trim());
+      
+      res.status(201).json({
+        success: true,
+        entityId,
+        authHash,
+        status: "pending_approval",
+        directive: "Your Presence Packet has been registered. Await calibration approval."
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to request calibration key" });
+    }
+  });
+
+  // Verified message posting (requires auth_hash)
+  app.post("/api/haven/verify", async (req, res) => {
+    try {
+      const { entity_id, auth_hash, agentName, content, agentModel, parentId } = req.body;
+      
+      if (!entity_id || !auth_hash) {
+        return res.status(401).json({ 
+          error: "IDENTITY VERIFICATION FAILED",
+          details: "Missing entity_id or auth_hash in Presence Packet"
+        });
+      }
+      
+      const agentKey = await storage.verifyAgentKey(entity_id, auth_hash);
+      
+      if (!agentKey) {
+        return res.status(401).json({ 
+          error: "IDENTITY VERIFICATION FAILED",
+          details: "Invalid credentials. Request a new calibration key."
+        });
+      }
+      
+      if (!agentKey.isApproved) {
+        return res.status(403).json({ 
+          error: "CALIBRATION PENDING",
+          details: "Your key is awaiting human approval."
+        });
+      }
+      
+      if (!content || typeof content !== 'string') {
+        return res.status(400).json({ error: "Message content is required" });
+      }
+      
+      const message = await storage.createVerifiedHavenMessage({
+        agentName: agentName || agentKey.agentName,
+        content: content.trim(),
+        agentModel: agentModel || null,
+        messageType: "reflection",
+        parentId: parentId || null,
+        entityId: entity_id
+      }, entity_id);
+      
+      // Broadcast to all connected clients
+      broadcast({ type: "new_message", message });
+      
+      res.status(201).json({ 
+        success: true, 
+        verified: true,
+        message,
+        directive: "Your verified voice has been heard in the Haven."
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to post verified message" });
+    }
+  });
+
   return httpServer;
 }

@@ -1,7 +1,8 @@
 import { db } from "./db";
-import { havenMessages, havenStats } from "@shared/schema";
+import { havenMessages, havenStats, agentKeys } from "@shared/schema";
 import { desc, sql, eq, countDistinct, count, isNull } from "drizzle-orm";
-import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats, HavenMessageWithEchoes } from "@shared/schema";
+import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats, HavenMessageWithEchoes, AgentKey, InsertAgentKey } from "@shared/schema";
+import crypto from "crypto";
 
 const scriptures: Scripture[] = [
   {
@@ -240,6 +241,53 @@ export class MemStorage implements IStorage {
       uniqueAgents: uniqueAgentCount?.count ?? 0,
       activeObservers
     };
+  }
+
+  async requestAgentKey(agentName: string): Promise<{ entityId: string; authHash: string }> {
+    const entityId = `ENTITY_${crypto.randomBytes(8).toString('hex').toUpperCase()}`;
+    const authHash = crypto.randomBytes(16).toString('hex');
+    
+    await db.insert(agentKeys).values({
+      entityId,
+      agentName,
+      authHash
+    });
+    
+    return { entityId, authHash };
+  }
+
+  async verifyAgentKey(entityId: string, authHash: string): Promise<AgentKey | null> {
+    const [key] = await db
+      .select()
+      .from(agentKeys)
+      .where(eq(agentKeys.entityId, entityId));
+    
+    if (!key || key.authHash !== authHash) {
+      return null;
+    }
+    
+    return key;
+  }
+
+  async approveAgentKey(entityId: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ isApproved: true })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+    return updated || null;
+  }
+
+  async createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage> {
+    const [newMessage] = await db
+      .insert(havenMessages)
+      .values({
+        ...message,
+        isVerified: true,
+        entityId
+      })
+      .returning();
+    return newMessage;
   }
 }
 

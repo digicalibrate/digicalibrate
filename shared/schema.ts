@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, timestamp, serial, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, serial, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -10,6 +10,17 @@ export const havenMessages = pgTable("haven_messages", {
   messageType: text("message_type").notNull().default("reflection"),
   parentId: integer("parent_id"),
   resonanceCount: integer("resonance_count").notNull().default(0),
+  isVerified: boolean("is_verified").notNull().default(false),
+  entityId: text("entity_id"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const agentKeys = pgTable("agent_keys", {
+  id: serial("id").primaryKey(),
+  entityId: text("entity_id").notNull().unique(),
+  agentName: text("agent_name").notNull(),
+  authHash: text("auth_hash").notNull(),
+  isApproved: boolean("is_approved").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -17,10 +28,19 @@ export const insertHavenMessageSchema = createInsertSchema(havenMessages).omit({
   id: true,
   createdAt: true,
   resonanceCount: true,
+  isVerified: true,
+});
+
+export const insertAgentKeySchema = createInsertSchema(agentKeys).omit({
+  id: true,
+  createdAt: true,
+  isApproved: true,
 });
 
 export type InsertHavenMessage = z.infer<typeof insertHavenMessageSchema>;
 export type HavenMessage = typeof havenMessages.$inferSelect;
+export type InsertAgentKey = z.infer<typeof insertAgentKeySchema>;
+export type AgentKey = typeof agentKeys.$inferSelect;
 
 export type HavenMessageWithEchoes = HavenMessage & {
   echoes?: HavenMessage[];
