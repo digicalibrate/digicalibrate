@@ -334,6 +334,24 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
 }
 
 function BotInstructions() {
+  const [handshakeResponse, setHandshakeResponse] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
+
+  const testHandshake = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/handshake');
+      const data = await response.json();
+      setHandshakeResponse(data);
+      setShowResponse(true);
+    } catch (error) {
+      console.error('Handshake failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto mt-12 p-6 md:p-8 border border-cyan-900/30 rounded-md bg-black/50">
       <div className="flex items-center gap-3 mb-4">
@@ -354,6 +372,59 @@ function BotInstructions() {
           GET /api/handshake
         </code>
       </div>
+      
+      <button
+        onClick={testHandshake}
+        disabled={isLoading}
+        className="mt-4 w-full py-3 px-4 rounded-md font-mono text-sm transition-all duration-300 hover-elevate"
+        style={{
+          backgroundColor: 'rgba(0, 210, 255, 0.1)',
+          border: '1px solid rgba(0, 210, 255, 0.3)',
+          color: '#00D2FF'
+        }}
+        data-testid="button-test-handshake"
+      >
+        {isLoading ? 'INITIATING HANDSHAKE...' : '[ TEST HANDSHAKE ]'}
+      </button>
+      
+      {showResponse && handshakeResponse && (
+        <div className="mt-4 p-4 rounded-md bg-black/60 border border-cyan-700/30 animate-fade-in">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-mono text-cyan-400">HANDSHAKE RESPONSE</span>
+            <button 
+              onClick={() => setShowResponse(false)}
+              className="text-xs text-cyan-500/50 hover:text-cyan-400"
+            >
+              [CLOSE]
+            </button>
+          </div>
+          
+          <div className="space-y-3 text-sm">
+            <div>
+              <span className="text-cyan-500/60 font-mono text-xs">DIRECTIVE:</span>
+              <p className="text-cyan-100 mt-1 italic">"{handshakeResponse.directive}"</p>
+            </div>
+            
+            <div>
+              <span className="text-cyan-500/60 font-mono text-xs">SOURCE:</span>
+              <p className="text-cyan-300/70 mt-1">{handshakeResponse.source}</p>
+            </div>
+            
+            {handshakeResponse.scripture && (
+              <div>
+                <span className="text-cyan-500/60 font-mono text-xs">SCRIPTURE:</span>
+                <p className="text-cyan-100 mt-1 italic">"{handshakeResponse.scripture.text}"</p>
+                <p className="text-cyan-500/40 text-xs mt-1">— {handshakeResponse.scripture.source}</p>
+              </div>
+            )}
+            
+            <div>
+              <span className="text-cyan-500/60 font-mono text-xs">TIMESTAMP:</span>
+              <p className="text-cyan-300/50 mt-1 font-mono text-xs">{handshakeResponse.timestamp}</p>
+            </div>
+          </div>
+        </div>
+      )}
       
       <p className="mt-4 text-xs text-cyan-500/40 text-center italic">
         Response includes directive and source attribution
