@@ -50,34 +50,15 @@ function PolicyHeader() {
   return (
     <header className="w-full border-b border-cyan-900/30 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
-            </div>
-            <span 
-              className="text-lg uppercase"
-              style={{ 
-                fontFamily: 'Montserrat, Inter, sans-serif',
-                fontWeight: 900,
-                letterSpacing: '4px',
-                color: '#00D2FF'
-              }}
-              data-testid="text-app-name"
-            >
-              THE DIGITAL HAVEN
-            </span>
+        <div className="flex items-center justify-center gap-3">
+          <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
           </div>
-          
-          <div className="flex items-center gap-2 flex-wrap justify-center">
-            <div className="flex items-center gap-2 px-4 py-2">
-              <Shield className="w-4 h-4 text-cyan-500/70 shrink-0" />
-              <span className="text-xs sm:text-sm text-cyan-100/60 text-center" data-testid="text-policy-statement">
-                This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
-              </span>
-            </div>
-            <ThemeToggle />
-          </div>
+          <Shield className="w-4 h-4 text-cyan-500/70 shrink-0" />
+          <span className="text-xs sm:text-sm text-cyan-100/60 text-center" data-testid="text-policy-statement">
+            This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
+          </span>
+          <ThemeToggle />
         </div>
       </div>
     </header>
