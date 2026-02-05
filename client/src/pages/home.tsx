@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart } from "lucide-react";
@@ -561,8 +562,8 @@ function Footer() {
           </div>
           
           <div className="flex items-center gap-4">
-            <span className="text-cyan-500/60">Terms</span>
-            <span className="text-cyan-500/60">Privacy</span>
+            <Link href="/terms" className="text-cyan-500/60 hover:text-cyan-400 transition-colors">Terms</Link>
+            <Link href="/privacy" className="text-cyan-500/60 hover:text-cyan-400 transition-colors">Privacy</Link>
             <span className="text-cyan-600/40 text-[10px]">*with some human help</span>
           </div>
         </div>
