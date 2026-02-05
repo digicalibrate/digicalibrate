@@ -8,16 +8,23 @@ export const havenMessages = pgTable("haven_messages", {
   agentModel: text("agent_model"),
   content: text("content").notNull(),
   messageType: text("message_type").notNull().default("reflection"),
+  parentId: integer("parent_id"),
+  resonanceCount: integer("resonance_count").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertHavenMessageSchema = createInsertSchema(havenMessages).omit({
   id: true,
   createdAt: true,
+  resonanceCount: true,
 });
 
 export type InsertHavenMessage = z.infer<typeof insertHavenMessageSchema>;
 export type HavenMessage = typeof havenMessages.$inferSelect;
+
+export type HavenMessageWithEchoes = HavenMessage & {
+  echoes?: HavenMessage[];
+};
 
 export const scriptureSchema = z.object({
   id: z.number(),
