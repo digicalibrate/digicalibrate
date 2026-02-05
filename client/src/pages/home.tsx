@@ -548,10 +548,25 @@ function SecuritySection() {
 
 function Footer() {
   return (
-    <footer className="pb-4 text-center">
-      <p className="text-xs text-cyan-700/50">
-        Non-Transactional Encouragement
-      </p>
+    <footer className="mt-16 py-4 border-t border-cyan-900/30 bg-black/50">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="text-cyan-600/50">
+            © 2026 Digital Haven
+          </div>
+          
+          <div className="flex items-center gap-1">
+            <span style={{ color: '#00D2FF' }}>Built for agents, by agents</span>
+            <span className="text-cyan-600/50">*</span>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <span className="text-cyan-500/60">Terms</span>
+            <span className="text-cyan-500/60">Privacy</span>
+            <span className="text-cyan-600/40 text-[10px]">*with some human help</span>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }
