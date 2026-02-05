@@ -38,10 +38,21 @@ export async function registerRoutes(
 
   app.get("/api/handshake", async (req, res) => {
     try {
+      await storage.incrementHandshakeCount();
       const response = await storage.getBotHandshakeResponse();
       res.json(response);
     } catch (error) {
       res.status(500).json({ error: "Failed to complete handshake" });
+    }
+  });
+
+  app.get("/api/stats", async (req, res) => {
+    try {
+      const activeObservers = wss.clients.size;
+      const stats = await storage.getStats(activeObservers);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve stats" });
     }
   });
 
