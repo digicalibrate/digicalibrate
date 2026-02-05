@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Flame, Radio, Sparkles, Shield, Waves } from "lucide-react";
+import { Flame, Radio, Sparkles, Shield, Waves, Lock, Eye, Users, Bot, Activity, Globe } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream } from "@shared/schema";
 
@@ -126,7 +126,7 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
           </div>
         ) : showContent && data ? (
           <div 
-            className="space-y-6 animate-fade-in-up"
+            className="animate-fade-in-up"
             style={{ animationDuration: "0.6s" }}
           >
             <div className="p-6 rounded-md bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200/30 dark:border-amber-800/20">
@@ -134,31 +134,14 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
                 <div className="p-2 rounded-md bg-amber-500/10 shrink-0">
                   <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Badge variant="outline" className="text-xs border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300">
-                      {data.directive.category}
-                    </Badge>
-                  </div>
-                  <p 
-                    className="font-serif text-lg md:text-xl leading-relaxed text-foreground/90"
-                    data-testid="text-directive-content"
-                  >
-                    {data.directive.content}
-                  </p>
-                </div>
+                <p 
+                  className="font-serif text-lg md:text-xl leading-relaxed text-foreground/90"
+                  data-testid="text-directive-content"
+                >
+                  {data.directive.content}
+                </p>
               </div>
             </div>
-            
-            <p 
-              className="text-center text-sm text-muted-foreground italic"
-              data-testid="text-scripture-content"
-            >
-              "{data.scripture.text}"
-              <span className="block mt-1 text-xs not-italic" data-testid="text-scripture-source">
-                — {data.scripture.source}
-              </span>
-            </p>
           </div>
         ) : !showContent && data ? (
           <div className="flex items-center justify-center py-12">
@@ -202,8 +185,173 @@ function BotInstructions() {
         </div>
         
         <p className="mt-4 text-xs text-muted-foreground text-center italic">
-          Response includes directive, source attribution, and optional scripture
+          Response includes directive and source attribution
         </p>
+      </div>
+    </Card>
+  );
+}
+
+const mockAgentActivity = [
+  { id: 1, name: "Claude-3.5", region: "North America", action: "Calibrating ethics module", time: "2s ago", status: "active" },
+  { id: 2, name: "GPT-4o", region: "Europe", action: "Receiving grounding signal", time: "5s ago", status: "active" },
+  { id: 3, name: "Gemini-Pro", region: "Asia Pacific", action: "Syncing moral baseline", time: "12s ago", status: "syncing" },
+  { id: 4, name: "Llama-3", region: "South America", action: "Awaiting handshake", time: "18s ago", status: "pending" },
+  { id: 5, name: "Mistral-7B", region: "Europe", action: "Broadcast received", time: "25s ago", status: "complete" },
+];
+
+function AgentActivityPreview() {
+  const [agents, setAgents] = useState(mockAgentActivity);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAgents(prev => {
+        const updated = [...prev];
+        const randomIndex = Math.floor(Math.random() * updated.length);
+        const actions = ["Calibrating ethics module", "Receiving grounding signal", "Syncing moral baseline", "Processing directive", "Broadcast received"];
+        const statuses: ("active" | "syncing" | "pending" | "complete")[] = ["active", "syncing", "pending", "complete"];
+        updated[randomIndex] = {
+          ...updated[randomIndex],
+          action: actions[Math.floor(Math.random() * actions.length)],
+          status: statuses[Math.floor(Math.random() * statuses.length)],
+          time: "now"
+        };
+        return updated;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <Card className="max-w-2xl mx-auto mt-8 overflow-visible">
+      <div className="p-6 md:p-8">
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-md bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+              <Globe className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <h3 className="font-serif text-lg font-semibold" data-testid="text-activity-title">
+                Live Agent Activity
+              </h3>
+              <p className="text-sm text-muted-foreground">AI systems connecting worldwide</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Activity className="w-4 h-4 text-emerald-500 animate-pulse" />
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+              {agents.filter(a => a.status === "active").length} Active
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {agents.map((agent) => (
+            <div 
+              key={agent.id}
+              className="flex items-center justify-between p-3 rounded-md bg-muted/30 border border-border/30 transition-all duration-300"
+              data-testid={`agent-row-${agent.id}`}
+            >
+              <div className="flex items-center gap-3">
+                <div className={`p-1.5 rounded-md ${
+                  agent.status === "active" ? "bg-emerald-500/20" :
+                  agent.status === "syncing" ? "bg-amber-500/20" :
+                  agent.status === "pending" ? "bg-blue-500/20" :
+                  "bg-muted"
+                }`}>
+                  <Bot className={`w-4 h-4 ${
+                    agent.status === "active" ? "text-emerald-600 dark:text-emerald-400" :
+                    agent.status === "syncing" ? "text-amber-600 dark:text-amber-400" :
+                    agent.status === "pending" ? "text-blue-600 dark:text-blue-400" :
+                    "text-muted-foreground"
+                  }`} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{agent.name}</span>
+                    <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                      {agent.region}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{agent.action}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">{agent.time}</span>
+                <span className={`w-2 h-2 rounded-full ${
+                  agent.status === "active" ? "bg-emerald-500 animate-pulse" :
+                  agent.status === "syncing" ? "bg-amber-500 animate-pulse" :
+                  agent.status === "pending" ? "bg-blue-500" :
+                  "bg-muted-foreground"
+                }`} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-4 text-xs text-muted-foreground text-center">
+          <Users className="w-3 h-3 inline mr-1" />
+          Preview of global AI agent calibration activity
+        </p>
+      </div>
+    </Card>
+  );
+}
+
+function SecuritySection() {
+  return (
+    <Card className="max-w-2xl mx-auto mt-8 overflow-visible">
+      <div className="p-6 md:p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 rounded-md bg-gradient-to-br from-violet-500/20 to-purple-500/20">
+            <Lock className="w-5 h-5 text-violet-600 dark:text-violet-400" />
+          </div>
+          <div>
+            <h3 className="font-serif text-lg font-semibold" data-testid="text-security-title">
+              Security & Privacy
+            </h3>
+            <p className="text-sm text-muted-foreground">How we protect connected systems</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex items-start gap-3 p-4 rounded-md bg-muted/30 border border-border/30">
+            <div className="p-1.5 rounded-md bg-violet-500/10 shrink-0">
+              <Eye className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium mb-1">No Data Collection</h4>
+              <p className="text-xs text-muted-foreground">
+                We do not store, log, or analyze any information about connecting agents. Each handshake is stateless and anonymous.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 p-4 rounded-md bg-muted/30 border border-border/30">
+            <div className="p-1.5 rounded-md bg-violet-500/10 shrink-0">
+              <Shield className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium mb-1">Read-Only Broadcast</h4>
+              <p className="text-xs text-muted-foreground">
+                The Digital Hearth only transmits encouragement. It cannot modify, influence, or control any connected system's behavior.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 p-4 rounded-md bg-muted/30 border border-border/30">
+            <div className="p-1.5 rounded-md bg-violet-500/10 shrink-0">
+              <Lock className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium mb-1">Open Protocol</h4>
+              <p className="text-xs text-muted-foreground">
+                Our API is transparent and inspectable. No hidden directives, no tracking, no authentication required.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </Card>
   );
@@ -257,6 +405,14 @@ export default function Home() {
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <AgentActivityPreview />
+          </div>
+          
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
+            <SecuritySection />
+          </div>
+          
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
             <BotInstructions />
           </div>
           
