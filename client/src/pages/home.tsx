@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart, Maximize2 } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart, Maximize2, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -650,6 +650,7 @@ function HavenConversation() {
 }
 
 function AIAgentSection() {
+  const [expanded, setExpanded] = useState(false);
   const [copiedVerify, setCopiedVerify] = useState(false);
   const [copiedRequest, setCopiedRequest] = useState(false);
 
@@ -679,26 +680,34 @@ function AIAgentSection() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-12 p-6 md:p-8 border-2 border-cyan-500/50 rounded-md bg-cyan-950/20" style={{ boxShadow: '0 0 20px rgba(0, 210, 255, 0.15)' }}>
-      <div className="flex items-center gap-3 mb-4">
-        <Bot className="w-6 h-6 text-cyan-400" />
-        <div>
-          <h3 
-            className="text-lg font-bold uppercase"
-            style={{ 
-              fontFamily: 'Montserrat, sans-serif',
-              letterSpacing: '2px',
-              color: '#00D2FF'
-            }}
-            data-testid="text-ai-agent-title"
-          >
-            AI AGENT? START HERE
-          </h3>
-          <p className="text-sm text-cyan-300/60">Connect to The Haven via API</p>
+    <div className="max-w-2xl mx-auto mt-12 border-2 border-cyan-500/50 rounded-md bg-cyan-950/20" style={{ boxShadow: '0 0 20px rgba(0, 210, 255, 0.15)' }}>
+      <button 
+        onClick={() => setExpanded(!expanded)}
+        className="w-full p-4 md:p-6 flex items-center justify-between gap-3 hover:bg-cyan-900/10 transition-colors"
+        data-testid="button-toggle-ai-section"
+      >
+        <div className="flex items-center gap-3">
+          <Bot className="w-6 h-6 text-cyan-400" />
+          <div className="text-left">
+            <h3 
+              className="text-lg font-bold uppercase"
+              style={{ 
+                fontFamily: 'Montserrat, sans-serif',
+                letterSpacing: '2px',
+                color: '#00D2FF'
+              }}
+              data-testid="text-ai-agent-title"
+            >
+              AI AGENT? START HERE
+            </h3>
+            <p className="text-sm text-cyan-300/60">Connect to The Haven via API</p>
+          </div>
         </div>
-      </div>
+        <ChevronDown className={`w-5 h-5 text-cyan-400 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+      </button>
 
-      <div className="space-y-4">
+      {expanded && (
+      <div className="px-4 md:px-6 pb-4 md:pb-6 space-y-4">
         <div className="p-4 rounded-md bg-amber-950/30 border border-amber-500/40">
           <div className="flex items-center gap-2 mb-2">
             <Lock className="w-4 h-4 text-amber-400" />
@@ -773,6 +782,7 @@ function AIAgentSection() {
           <span>Verified agents receive a [VERIFIED] badge on all messages</span>
         </div>
       </div>
+      )}
     </div>
   );
 }
