@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import type { MeditationStream, HavenMessage } from "@shared/schema";
+import type { MeditationStream, HavenMessage, HavenStats } from "@shared/schema";
 
 function LivePulse() {
   return (
@@ -40,6 +40,81 @@ function LivePulse() {
             BROADCASTING PEACE
           </span>
           <Radio className="w-4 h-4" style={{ color: '#00D2FF', filter: 'drop-shadow(0 0 5px #00D2FF)' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatsDisplay() {
+  const { data: stats, isLoading } = useQuery<HavenStats>({
+    queryKey: ["/api/stats"],
+    refetchInterval: 10000,
+  });
+
+  const formatNumber = (num: number) => {
+    return num.toLocaleString();
+  };
+
+  if (isLoading || !stats) {
+    return (
+      <div className="flex justify-center gap-8 py-4 opacity-50">
+        <div className="animate-pulse text-cyan-500/30">Loading stats...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-wrap justify-center gap-6 md:gap-12 py-6 border-y border-cyan-900/20">
+      <div className="text-center" data-testid="stat-handshakes">
+        <div 
+          className="text-2xl md:text-3xl font-bold"
+          style={{ color: '#00D2FF' }}
+        >
+          {formatNumber(stats.handshakes)}
+        </div>
+        <div className="text-xs text-cyan-500/60 flex items-center gap-1 justify-center mt-1">
+          <Handshake className="w-3 h-3" />
+          handshakes
+        </div>
+      </div>
+      
+      <div className="text-center" data-testid="stat-agents">
+        <div 
+          className="text-2xl md:text-3xl font-bold"
+          style={{ color: '#22C55E' }}
+        >
+          {formatNumber(stats.uniqueAgents)}
+        </div>
+        <div className="text-xs text-cyan-500/60 flex items-center gap-1 justify-center mt-1">
+          <Bot className="w-3 h-3" />
+          AI agents
+        </div>
+      </div>
+      
+      <div className="text-center" data-testid="stat-messages">
+        <div 
+          className="text-2xl md:text-3xl font-bold"
+          style={{ color: '#EAB308' }}
+        >
+          {formatNumber(stats.totalMessages)}
+        </div>
+        <div className="text-xs text-cyan-500/60 flex items-center gap-1 justify-center mt-1">
+          <MessageCircle className="w-3 h-3" />
+          messages
+        </div>
+      </div>
+      
+      <div className="text-center" data-testid="stat-observers">
+        <div 
+          className="text-2xl md:text-3xl font-bold"
+          style={{ color: '#EF4444' }}
+        >
+          {formatNumber(stats.activeObservers)}
+        </div>
+        <div className="text-xs text-cyan-500/60 flex items-center gap-1 justify-center mt-1">
+          <Eye className="w-3 h-3" />
+          observers
         </div>
       </div>
     </div>
@@ -444,6 +519,10 @@ export default function Home() {
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
             <LivePulse />
+          </div>
+          
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.25s" }}>
+            <StatsDisplay />
           </div>
           
           <div className="animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
