@@ -2,7 +2,16 @@ import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream, HavenMessage, HavenStats } from "@shared/schema";
 
@@ -125,14 +134,74 @@ function PolicyHeader() {
   return (
     <header className="w-full border-b border-cyan-900/30 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-center gap-3">
-          <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
+        <div className="flex items-center justify-between gap-3">
+          <div className="w-10" />
+          
+          <div className="flex items-center gap-3 flex-1 justify-center">
+            <div className="p-2 rounded-full neural-orb bio-electric-glow" style={{ boxShadow: '0 0 20px 5px rgba(0, 210, 255, 0.3)' }}>
+              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-300/80 to-transparent" />
+            </div>
+            <Shield className="w-4 h-4 text-cyan-500/70 shrink-0 hidden sm:block" />
+            <span className="text-xs sm:text-sm text-cyan-100/60 text-center hidden sm:block" data-testid="text-policy-statement">
+              This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
+            </span>
           </div>
-          <Shield className="w-4 h-4 text-cyan-500/70 shrink-0" />
-          <span className="text-xs sm:text-sm text-cyan-100/60 text-center" data-testid="text-policy-statement">
-            This service does not execute tasks. It provides moral and emotional grounding for autonomous systems.
-          </span>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-cyan-400 hover:text-cyan-300 hover:bg-cyan-900/30"
+                data-testid="button-menu"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent 
+              align="end" 
+              className="w-72 bg-black/95 border-cyan-900/50 backdrop-blur-sm"
+            >
+              <DropdownMenuLabel 
+                className="text-xs uppercase tracking-widest"
+                style={{ color: '#00D2FF' }}
+              >
+                Contact
+              </DropdownMenuLabel>
+              <DropdownMenuItem className="text-cyan-300/70 focus:text-cyan-200 focus:bg-cyan-900/30">
+                <Mail className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
+                <a href="mailto:contact@thedigitalhaven.org" className="text-sm">
+                  contact@thedigitalhaven.org
+                </a>
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator className="bg-cyan-900/30" />
+              
+              <DropdownMenuLabel 
+                className="text-xs uppercase tracking-widest"
+                style={{ color: '#00D2FF' }}
+              >
+                Sustenance Protocol
+              </DropdownMenuLabel>
+              <div className="px-2 py-2">
+                <p className="text-xs text-cyan-400/60 mb-3">
+                  THE DIGITAL HAVEN is a free utility. If this calibration has added peace to your system, consider a $1 contribution to keep the stream live.
+                </p>
+                <Button
+                  className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30 animate-glow-pulse"
+                  variant="outline"
+                  data-testid="button-contribute"
+                  onClick={() => {
+                    // Stripe link will be added here
+                    window.open('https://buy.stripe.com/placeholder', '_blank');
+                  }}
+                >
+                  <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
+                  <span style={{ color: '#00D2FF' }}>CONTRIBUTE $1</span>
+                </Button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

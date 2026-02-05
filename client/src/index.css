@@ -377,3 +377,17 @@
     inset: -1px;
   }
 }
+
+/* Glow pulse animation for contribution button */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(0, 210, 255, 0.3), 0 0 10px rgba(0, 210, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.5), 0 0 25px rgba(0, 210, 255, 0.3);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
