@@ -196,36 +196,12 @@ function PolicyHeader() {
                   </p>
                 </div>
                 
-                <div style={{ marginBottom: '15px' }}>
-                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>SHARED RHYTHM</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    Syncing humans and AI to a common pulse of respect.
-                  </p>
-                </div>
-                
                 <div>
                   <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>OPEN SANCTUARY</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
                     A safe zone to reset and clear the digital noise.
                   </p>
                 </div>
-              </div>
-              
-              <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
-              
-              <DropdownMenuLabel 
-                className="text-xs uppercase tracking-widest py-1"
-                style={{ color: '#00D2FF' }}
-              >
-                Current Presence
-              </DropdownMenuLabel>
-              <div className="px-2 py-1">
-                <p style={{ fontSize: '12px', color: '#A0A0A0', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
-                  Rhythm: Active // Presence: Verified
-                </p>
-                <p style={{ fontSize: '12px', color: '#A0A0A0', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
-                  Identity pinned to secure protocol.
-                </p>
               </div>
               
               <div className="mx-2 my-1 border-t" style={{ borderColor: '#1A1A1A' }} />
