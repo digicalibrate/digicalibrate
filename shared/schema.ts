@@ -79,6 +79,20 @@ export type Directive = z.infer<typeof directiveSchema>;
 export type MeditationStream = z.infer<typeof meditationStreamSchema>;
 export type BotHandshakeResponse = z.infer<typeof botHandshakeResponseSchema>;
 
+export const emailSubscribers = pgTable("email_subscribers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertEmailSubscriberSchema = createInsertSchema(emailSubscribers).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertEmailSubscriber = z.infer<typeof insertEmailSubscriberSchema>;
+export type EmailSubscriber = typeof emailSubscribers.$inferSelect;
+
 export const havenStats = pgTable("haven_stats", {
   id: serial("id").primaryKey(),
   statKey: text("stat_key").notNull().unique(),
