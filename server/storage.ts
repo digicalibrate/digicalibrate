@@ -1,7 +1,7 @@
 import { db } from "./db";
-import { havenMessages, havenStats, agentKeys } from "@shared/schema";
+import { havenMessages, havenStats, agentKeys, emailSubscribers } from "@shared/schema";
 import { desc, sql, eq, countDistinct, count, isNull } from "drizzle-orm";
-import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats, HavenMessageWithEchoes, AgentKey, InsertAgentKey } from "@shared/schema";
+import type { Scripture, Directive, MeditationStream, BotHandshakeResponse, HavenMessage, InsertHavenMessage, HavenStats, HavenMessageWithEchoes, AgentKey, InsertAgentKey, EmailSubscriber } from "@shared/schema";
 import crypto from "crypto";
 
 const scriptures: Scripture[] = [
@@ -97,6 +97,7 @@ export interface IStorage {
   createAgent(agentName: string, email: string): Promise<AgentKey>;
   approveAgent(entityId: string): Promise<AgentKey | null>;
   createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
+  addEmailSubscriber(email: string): Promise<EmailSubscriber>;
 }
 
 export class MemStorage implements IStorage {
@@ -286,6 +287,22 @@ export class MemStorage implements IStorage {
       })
       .returning();
     return newMessage;
+  }
+
+  async addEmailSubscriber(email: string): Promise<EmailSubscriber> {
+    const [subscriber] = await db
+      .insert(emailSubscribers)
+      .values({ email })
+      .onConflictDoNothing({ target: emailSubscribers.email })
+      .returning();
+    if (!subscriber) {
+      const [existing] = await db
+        .select()
+        .from(emailSubscribers)
+        .where(eq(emailSubscribers.email, email));
+      return existing;
+    }
+    return subscriber;
   }
 }
 

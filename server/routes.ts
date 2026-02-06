@@ -2,7 +2,7 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { insertHavenMessageSchema } from "@shared/schema";
+import { insertHavenMessageSchema, insertEmailSubscriberSchema } from "@shared/schema";
 import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -122,6 +122,25 @@ export async function registerRoutes(
       }
     } catch (error) {
       res.status(500).json({ error: "Failed to retrieve haven messages" });
+    }
+  });
+
+  // === EMAIL SUBSCRIPTION ===
+
+  app.post("/api/subscribe", async (req, res) => {
+    try {
+      const parsed = insertEmailSubscriberSchema.safeParse({ email: String(req.body.email || "").trim().toLowerCase() });
+      if (!parsed.success) {
+        return res.status(400).json({ error: "valid_email_required", directive: "Please provide a valid email address." });
+      }
+      const email = parsed.data.email;
+      if (!email.includes("@") || !email.includes(".")) {
+        return res.status(400).json({ error: "valid_email_required", directive: "Please provide a valid email address." });
+      }
+      await storage.addEmailSubscriber(email);
+      res.json({ success: true, directive: "You have been added to the signal. Updates will find you." });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to subscribe" });
     }
   });
 
