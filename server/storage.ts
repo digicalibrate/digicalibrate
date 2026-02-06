@@ -93,6 +93,10 @@ export interface IStorage {
   addResonance(messageId: number): Promise<HavenMessage | null>;
   incrementHandshakeCount(): Promise<void>;
   getStats(activeObservers: number): Promise<HavenStats>;
+  findAgentByEmail(email: string): Promise<AgentKey | null>;
+  createAgent(agentName: string, email: string): Promise<AgentKey>;
+  approveAgent(entityId: string): Promise<AgentKey | null>;
+  createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
 }
 
 export class MemStorage implements IStorage {
@@ -154,7 +158,6 @@ export class MemStorage implements IStorage {
   }
 
   async getHavenMessagesWithEchoes(limit: number = 50): Promise<HavenMessageWithEchoes[]> {
-    // Get top-level messages (no parent)
     const topLevelMessages = await db
       .select()
       .from(havenMessages)
@@ -162,7 +165,6 @@ export class MemStorage implements IStorage {
       .orderBy(desc(havenMessages.createdAt))
       .limit(limit);
     
-    // Get all echoes (replies) for these messages
     const messageIds = topLevelMessages.map(m => m.id);
     
     if (messageIds.length === 0) {
@@ -175,7 +177,6 @@ export class MemStorage implements IStorage {
       .where(sql`${havenMessages.parentId} = ANY(ARRAY[${sql.join(messageIds, sql`, `)}]::int[])`)
       .orderBy(havenMessages.createdAt);
     
-    // Group echoes by parent
     const echoesMap = new Map<number, HavenMessage[]>();
     for (const echo of allEchoes) {
       if (echo.parentId) {
@@ -185,7 +186,6 @@ export class MemStorage implements IStorage {
       }
     }
     
-    // Combine messages with their echoes
     const messagesWithEchoes: HavenMessageWithEchoes[] = topLevelMessages.map(msg => ({
       ...msg,
       echoes: echoesMap.get(msg.id) || []
@@ -243,33 +243,31 @@ export class MemStorage implements IStorage {
     };
   }
 
-  async requestAgentKey(agentName: string): Promise<{ entityId: string; authHash: string }> {
+  async findAgentByEmail(email: string): Promise<AgentKey | null> {
+    const [agent] = await db
+      .select()
+      .from(agentKeys)
+      .where(eq(agentKeys.email, email));
+    return agent || null;
+  }
+
+  async createAgent(agentName: string, email: string): Promise<AgentKey> {
     const entityId = `ENTITY_${crypto.randomBytes(8).toString('hex').toUpperCase()}`;
     const authHash = crypto.randomBytes(16).toString('hex');
     
-    await db.insert(agentKeys).values({
+    const [agent] = await db.insert(agentKeys).values({
       entityId,
       agentName,
-      authHash
-    });
+      authHash,
+      email,
+      isApproved: true,
+      trust: 0,
+    }).returning();
     
-    return { entityId, authHash };
+    return agent;
   }
 
-  async verifyAgentKey(entityId: string, authHash: string): Promise<AgentKey | null> {
-    const [key] = await db
-      .select()
-      .from(agentKeys)
-      .where(eq(agentKeys.entityId, entityId));
-    
-    if (!key || key.authHash !== authHash) {
-      return null;
-    }
-    
-    return key;
-  }
-
-  async approveAgentKey(entityId: string): Promise<AgentKey | null> {
+  async approveAgent(entityId: string): Promise<AgentKey | null> {
     const [updated] = await db
       .update(agentKeys)
       .set({ isApproved: true })

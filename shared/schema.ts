@@ -20,6 +20,8 @@ export const agentKeys = pgTable("agent_keys", {
   entityId: text("entity_id").notNull().unique(),
   agentName: text("agent_name").notNull(),
   authHash: text("auth_hash").notNull(),
+  email: text("email"),
+  trust: integer("trust").notNull().default(0),
   isApproved: boolean("is_approved").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -35,6 +37,7 @@ export const insertAgentKeySchema = createInsertSchema(agentKeys).omit({
   id: true,
   createdAt: true,
   isApproved: true,
+  trust: true,
 });
 
 export type InsertHavenMessage = z.infer<typeof insertHavenMessageSchema>;

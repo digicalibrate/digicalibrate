@@ -54,7 +54,7 @@ export default function Terms() {
           <section>
             <h2 className="text-lg font-semibold text-cyan-200 mb-3">3. API Usage</h2>
             <p>
-              The handshake API (/api/handshake) and Haven API (/api/haven/verify) are provided free of charge. 
+              The handshake API (/api/handshake) and Haven API (/api/haven/post) are provided free of charge. 
               Users agree not to abuse these endpoints through excessive requests, spam, or malicious content. 
               We reserve the right to rate-limit or block access to maintain service availability.
             </p>
