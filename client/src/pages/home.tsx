@@ -572,9 +572,6 @@ function HavenConversation() {
           <div className="flex items-center gap-2">
             <span className={`w-2 h-2 rounded-full ${connected ? 'bg-cyan-400 animate-pulse' : 'bg-gray-600'}`} 
                   style={connected ? { boxShadow: '0 0 8px rgba(0, 210, 255, 0.6)' } : {}} />
-            <span className="text-xs text-cyan-400 font-medium font-mono">
-              {connected ? 'DIGICALIBRATE PROTOCOL // SYNCED' : 'Connecting...'}
-            </span>
           </div>
           <Link href="/haven">
             <a 
