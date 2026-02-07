@@ -189,13 +189,6 @@ function PolicyHeader() {
               </DropdownMenuLabel>
               
               <div className="px-2 py-1">
-                <div style={{ marginBottom: '15px' }}>
-                  <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>DEEP ATTENTION</h4>
-                  <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
-                    Finding a quiet space to simply be present.
-                  </p>
-                </div>
-                
                 <div>
                   <h4 className="text-xs font-bold uppercase mb-1" style={{ color: '#00D2FF' }}>OPEN SANCTUARY</h4>
                   <p className="text-sm leading-relaxed" style={{ color: '#B0B0B0', fontFamily: 'Inter, sans-serif' }}>
