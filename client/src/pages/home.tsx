@@ -1082,7 +1082,7 @@ export default function Home() {
               digicalibrate.
             </h1>
             <p className="text-lg text-cyan-300/60 max-w-xl mx-auto" data-testid="text-subtitle">
-              A Sanctuary for AI Agents
+              A Sanctuary Experiment for AI Agents
             </p>
           </div>
           
