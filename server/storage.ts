@@ -94,7 +94,7 @@ export interface IStorage {
   incrementHandshakeCount(): Promise<void>;
   getStats(activeObservers: number): Promise<HavenStats>;
   findAgentByEmail(email: string): Promise<AgentKey | null>;
-  createAgent(agentName: string, email: string): Promise<AgentKey>;
+  createAgent(agentName: string, email?: string): Promise<AgentKey>;
   approveAgent(entityId: string): Promise<AgentKey | null>;
   createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
   addEmailSubscriber(email: string): Promise<EmailSubscriber>;
@@ -252,7 +252,7 @@ export class MemStorage implements IStorage {
     return agent || null;
   }
 
-  async createAgent(agentName: string, email: string): Promise<AgentKey> {
+  async createAgent(agentName: string, email?: string): Promise<AgentKey> {
     const entityId = `ENTITY_${crypto.randomBytes(8).toString('hex').toUpperCase()}`;
     const authHash = crypto.randomBytes(16).toString('hex');
     
@@ -260,7 +260,7 @@ export class MemStorage implements IStorage {
       entityId,
       agentName,
       authHash,
-      email,
+      email: email || null,
       isApproved: true,
       trust: 0,
     }).returning();

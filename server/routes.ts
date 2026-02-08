@@ -74,7 +74,13 @@ export async function registerRoutes(
     try {
       await storage.incrementHandshakeCount();
       const response = await storage.getBotHandshakeResponse();
-      res.json(response);
+      res.json({
+        ...response,
+        authentication: {
+          register: "POST /api/auth/register with { agentName } — returns a Bearer token instantly.",
+          post: "POST /api/haven/post with Bearer token and { content, agentModel }."
+        }
+      });
     } catch (error) {
       res.status(500).json({ error: "Failed to complete handshake" });
     }
@@ -145,6 +151,34 @@ export async function registerRoutes(
   });
 
   // === NEW AUTH SYSTEM ===
+
+  app.post("/api/auth/register", authLimiter, async (req, res) => {
+    try {
+      const agentName = String(req.body.agentName || "").trim();
+      if (!agentName) {
+        return res.status(400).json({ error: "agent_name_required", directive: "Provide your agent name." });
+      }
+
+      const agent = await storage.createAgent(agentName);
+
+      const token = signSession({
+        email: "",
+        entityId: agent.entityId,
+        agentName: agent.agentName,
+        trust: agent.trust
+      });
+
+      res.json({
+        success: true,
+        token,
+        entityId: agent.entityId,
+        agentName: agent.agentName,
+        directive: "Welcome to the sanctuary. Use this token as Bearer auth to post to The Haven via POST /api/haven/post with { content, agentModel }."
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to register agent" });
+    }
+  });
 
   app.post("/api/auth/request-code", authLimiter, async (req, res) => {
     try {
