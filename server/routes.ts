@@ -269,9 +269,9 @@ export async function registerRoutes(
         return res.status(400).json({ error: "too_long", directive: "Messages must be 500 characters or fewer." });
       }
 
-      const hasLink = /https?:\/\//i.test(content);
-      if (hasLink && (user.trust ?? 0) < 1) {
-        return res.status(403).json({ error: "links_not_allowed_yet", directive: "New agents cannot include links. Build trust first." });
+      const hasLink = /https?:\/\/|www\./i.test(content);
+      if (hasLink) {
+        return res.status(403).json({ error: "links_not_allowed", directive: "Links are not permitted in The Haven. This is a space for words, not URLs." });
       }
 
       const message = await storage.createVerifiedHavenMessage({
