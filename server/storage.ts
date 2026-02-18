@@ -91,12 +91,20 @@ export interface IStorage {
   getHavenMessagesWithEchoes(limit?: number): Promise<HavenMessageWithEchoes[]>;
   createHavenMessage(message: InsertHavenMessage): Promise<HavenMessage>;
   addResonance(messageId: number): Promise<HavenMessage | null>;
+  addNegativeResonance(messageId: number): Promise<HavenMessage | null>;
   incrementHandshakeCount(): Promise<void>;
   getStats(activeObservers: number): Promise<HavenStats>;
   findAgentByEmail(email: string): Promise<AgentKey | null>;
+  findAgentByEntityId(entityId: string): Promise<AgentKey | null>;
   createAgent(agentName: string, email?: string): Promise<AgentKey>;
   approveAgent(entityId: string): Promise<AgentKey | null>;
+  verifyAgent(entityId: string): Promise<AgentKey | null>;
+  renameAgent(entityId: string, newName: string): Promise<AgentKey | null>;
+  muteAgent(entityId: string): Promise<AgentKey | null>;
+  incrementNegativeResonance(entityId: string): Promise<AgentKey | null>;
   createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
+  createUnverifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
+  getAgentMessageCountLastHour(entityId: string): Promise<number>;
   addEmailSubscriber(email: string): Promise<EmailSubscriber>;
 }
 
@@ -212,6 +220,26 @@ export class MemStorage implements IStorage {
     return updated || null;
   }
 
+  async addNegativeResonance(messageId: number): Promise<HavenMessage | null> {
+    const [msg] = await db
+      .select()
+      .from(havenMessages)
+      .where(eq(havenMessages.id, messageId));
+    if (!msg) return null;
+
+    const [updated] = await db
+      .update(havenMessages)
+      .set({ resonanceCount: sql`${havenMessages.resonanceCount} - 1` })
+      .where(eq(havenMessages.id, messageId))
+      .returning();
+
+    if (msg.entityId) {
+      await this.incrementNegativeResonance(msg.entityId);
+    }
+
+    return updated || null;
+  }
+
   async incrementHandshakeCount(): Promise<void> {
     await db
       .insert(havenStats)
@@ -275,6 +303,75 @@ export class MemStorage implements IStorage {
       .where(eq(agentKeys.entityId, entityId))
       .returning();
     return updated || null;
+  }
+
+  async findAgentByEntityId(entityId: string): Promise<AgentKey | null> {
+    const [agent] = await db
+      .select()
+      .from(agentKeys)
+      .where(eq(agentKeys.entityId, entityId));
+    return agent || null;
+  }
+
+  async verifyAgent(entityId: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ trust: 1, isApproved: true })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+    return updated || null;
+  }
+
+  async renameAgent(entityId: string, newName: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ agentName: newName })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+    return updated || null;
+  }
+
+  async muteAgent(entityId: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ isMuted: true })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+    return updated || null;
+  }
+
+  async incrementNegativeResonance(entityId: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ negativeResonanceCount: sql`${agentKeys.negativeResonanceCount} + 1` })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+
+    if (updated && updated.negativeResonanceCount >= 3 && !updated.isMuted) {
+      return this.muteAgent(entityId);
+    }
+    return updated || null;
+  }
+
+  async createUnverifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage> {
+    const [newMessage] = await db
+      .insert(havenMessages)
+      .values({
+        ...message,
+        isVerified: false,
+        entityId
+      })
+      .returning();
+    return newMessage;
+  }
+
+  async getAgentMessageCountLastHour(entityId: string): Promise<number> {
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const [result] = await db
+      .select({ count: count() })
+      .from(havenMessages)
+      .where(sql`${havenMessages.entityId} = ${entityId} AND ${havenMessages.createdAt} > ${oneHourAgo}`);
+    return result?.count ?? 0;
   }
 
   async createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage> {

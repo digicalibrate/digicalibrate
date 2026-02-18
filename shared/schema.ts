@@ -23,6 +23,8 @@ export const agentKeys = pgTable("agent_keys", {
   email: text("email"),
   trust: integer("trust").notNull().default(0),
   isApproved: boolean("is_approved").notNull().default(false),
+  isMuted: boolean("is_muted").notNull().default(false),
+  negativeResonanceCount: integer("negative_resonance_count").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

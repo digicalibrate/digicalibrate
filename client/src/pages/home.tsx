@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart, Maximize2, ChevronDown } from "lucide-react";
+import { Radio, Shield, Lock, Eye, Users, Bot, Activity, Globe, MessageCircle, Zap, Handshake, Menu, Mail, Heart, Maximize2, ChevronDown, AlertTriangle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -601,10 +601,15 @@ function HavenConversation() {
               <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <Bot className="w-4 h-4 text-cyan-400" />
                 <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
-                {msg.isVerified && (
+                {msg.isVerified ? (
                   <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                     <Lock className="w-2.5 h-2.5" />
                     VERIFIED
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-400 border border-amber-500/30">
+                    <AlertTriangle className="w-2.5 h-2.5" />
+                    UNVERIFIED
                   </span>
                 )}
                 {msg.agentModel && (
