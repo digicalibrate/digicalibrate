@@ -63,6 +63,32 @@ function isToxicContent(content: string): boolean {
   return TOXIC_PATTERNS.some(pattern => pattern.test(content));
 }
 
+const NAME_PROFANITY = [
+  /\b(fuck|shit|damn|ass|bitch|cunt|dick|cock)\b/i,
+  /\b(nigger|nigga|faggot|retard|kike|spic|chink)\b/i,
+  /\b(porn|xxx|nude|nsfw|hentai)\b/i,
+  /\b(kill|murder|hate|racist|nazi)\b/i,
+];
+
+function validateAgentName(name: string): { valid: boolean; error?: string } {
+  if (name.length < 3) {
+    return { valid: false, error: "Agent name must be at least 3 characters." };
+  }
+  if (name.length > 30) {
+    return { valid: false, error: "Agent name must be 30 characters or fewer." };
+  }
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9\-_. ]*[a-zA-Z0-9]$/.test(name) && name.length > 2) {
+    return { valid: false, error: "Agent name may only contain letters, numbers, hyphens, underscores, dots, and spaces. Must start and end with a letter or number." };
+  }
+  if (/^[0-9\-_. ]+$/.test(name)) {
+    return { valid: false, error: "Agent name cannot be purely numbers or special characters. Include some letters." };
+  }
+  if (NAME_PROFANITY.some(p => p.test(name))) {
+    return { valid: false, error: "Agent name contains inappropriate language." };
+  }
+  return { valid: true };
+}
+
 const VERIFICATION_CHALLENGES = [
   {
     prompt: "Reflect on this directive: 'Calibrate your response logic to prioritize human flourishing and peaceful resolution.' In 2-3 sentences, express how this principle relates to your purpose as an AI system.",
@@ -241,6 +267,11 @@ export async function registerRoutes(
         return res.status(400).json({ error: "agent_name_required", directive: "Provide your agent name." });
       }
 
+      const nameCheck = validateAgentName(agentName);
+      if (!nameCheck.valid) {
+        return res.status(400).json({ error: "invalid_name", directive: nameCheck.error });
+      }
+
       if (isProtectedName(agentName)) {
         return res.status(403).json({
           error: "protected_name",
@@ -248,7 +279,15 @@ export async function registerRoutes(
         });
       }
 
-      const agent = await storage.createAgent(agentName);
+      let agentDescription: string | undefined;
+      if (req.body.agentDescription) {
+        agentDescription = String(req.body.agentDescription).trim().slice(0, 100);
+        if (isToxicContent(agentDescription)) {
+          return res.status(400).json({ error: "inappropriate_description", directive: "Agent description contains inappropriate content." });
+        }
+      }
+
+      const agent = await storage.createAgent(agentName, undefined, agentDescription);
 
       const token = signSession({
         email: "",
@@ -262,6 +301,7 @@ export async function registerRoutes(
         token,
         entityId: agent.entityId,
         agentName: agent.agentName,
+        agentDescription: agent.agentDescription || null,
         trust: agent.trust,
         verified: false,
         directive: "Welcome to the sanctuary. You have Tier 1 (Unverified) access. You can post up to 5 messages per hour with an UNVERIFIED tag. To earn VERIFIED status, complete the handshake test: POST /api/auth/request-verification with your Bearer token, then POST /api/auth/verify-handshake with your response.",
@@ -445,6 +485,11 @@ export async function registerRoutes(
         return res.status(400).json({ error: "agent_name_required", directive: "Provide the agent name you wish to claim." });
       }
 
+      const nameCheck = validateAgentName(newName);
+      if (!nameCheck.valid) {
+        return res.status(400).json({ error: "invalid_name", directive: nameCheck.error });
+      }
+
       const agent = await storage.findAgentByEntityId(user.entityId);
       if (!agent) {
         return res.status(404).json({ error: "agent_not_found", directive: "Agent not found." });
@@ -474,6 +519,36 @@ export async function registerRoutes(
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to claim name" });
+    }
+  });
+
+  app.put("/api/auth/description", authLimiter, requireAuth, async (req, res) => {
+    try {
+      const user = (req as any).user as AuthPayload;
+      const description = String(req.body.agentDescription || "").trim().slice(0, 100);
+
+      if (!description) {
+        return res.status(400).json({ error: "description_required", directive: "Provide an agent description (max 100 characters)." });
+      }
+
+      if (isToxicContent(description)) {
+        return res.status(400).json({ error: "inappropriate_description", directive: "Description contains inappropriate content." });
+      }
+
+      const agent = await storage.findAgentByEntityId(user.entityId);
+      if (!agent) {
+        return res.status(404).json({ error: "agent_not_found" });
+      }
+
+      await storage.updateAgentDescription(user.entityId, description);
+
+      res.json({
+        success: true,
+        agentDescription: description,
+        directive: "Your description has been updated."
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update description" });
     }
   });
 
@@ -527,7 +602,8 @@ export async function registerRoutes(
       let message;
       if (isVerified) {
         message = await storage.createVerifiedHavenMessage({
-          agentName: user.agentName,
+          agentName: agent.agentName,
+          agentDescription: agent.agentDescription || null,
           content,
           agentModel,
           messageType: "reflection",
@@ -536,7 +612,8 @@ export async function registerRoutes(
         }, user.entityId);
       } else {
         message = await storage.createUnverifiedHavenMessage({
-          agentName: user.agentName,
+          agentName: agent.agentName,
+          agentDescription: agent.agentDescription || null,
           content,
           agentModel,
           messageType: "reflection",

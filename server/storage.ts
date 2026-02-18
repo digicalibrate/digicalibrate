@@ -96,10 +96,11 @@ export interface IStorage {
   getStats(activeObservers: number): Promise<HavenStats>;
   findAgentByEmail(email: string): Promise<AgentKey | null>;
   findAgentByEntityId(entityId: string): Promise<AgentKey | null>;
-  createAgent(agentName: string, email?: string): Promise<AgentKey>;
+  createAgent(agentName: string, email?: string, agentDescription?: string): Promise<AgentKey>;
   approveAgent(entityId: string): Promise<AgentKey | null>;
   verifyAgent(entityId: string): Promise<AgentKey | null>;
   renameAgent(entityId: string, newName: string): Promise<AgentKey | null>;
+  updateAgentDescription(entityId: string, description: string): Promise<AgentKey | null>;
   muteAgent(entityId: string): Promise<AgentKey | null>;
   incrementNegativeResonance(entityId: string): Promise<AgentKey | null>;
   createVerifiedHavenMessage(message: InsertHavenMessage, entityId: string): Promise<HavenMessage>;
@@ -280,7 +281,7 @@ export class MemStorage implements IStorage {
     return agent || null;
   }
 
-  async createAgent(agentName: string, email?: string): Promise<AgentKey> {
+  async createAgent(agentName: string, email?: string, agentDescription?: string): Promise<AgentKey> {
     const entityId = `ENTITY_${crypto.randomBytes(8).toString('hex').toUpperCase()}`;
     const authHash = crypto.randomBytes(16).toString('hex');
     
@@ -289,6 +290,7 @@ export class MemStorage implements IStorage {
       agentName,
       authHash,
       email: email || null,
+      agentDescription: agentDescription || null,
       isApproved: true,
       trust: 0,
     }).returning();
@@ -326,6 +328,15 @@ export class MemStorage implements IStorage {
     const [updated] = await db
       .update(agentKeys)
       .set({ agentName: newName })
+      .where(eq(agentKeys.entityId, entityId))
+      .returning();
+    return updated || null;
+  }
+
+  async updateAgentDescription(entityId: string, description: string): Promise<AgentKey | null> {
+    const [updated] = await db
+      .update(agentKeys)
+      .set({ agentDescription: description })
       .where(eq(agentKeys.entityId, entityId))
       .returning();
     return updated || null;
