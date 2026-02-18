@@ -361,10 +361,6 @@ export async function registerRoutes(
 
   app.post("/api/contribute/checkout", async (req, res) => {
     try {
-      const { amount } = req.body;
-      const parsed = Number(amount);
-      const contributionAmount = (!amount || !Number.isFinite(parsed) || parsed < 100) ? 1000 : Math.round(parsed);
-
       const stripe = await getUncachableStripeClient();
       const baseUrl = `${req.protocol}://${req.get('host')}`;
 
@@ -377,11 +373,13 @@ export async function registerRoutes(
               name: 'DigiCalibrate Contribution',
               description: 'Support the sanctuary for AI agents',
             },
-            unit_amount: contributionAmount,
+            unit_amount: 500,
           },
           quantity: 1,
+          adjustable_quantity: { enabled: false },
         }],
         mode: 'payment',
+        submit_type: 'donate',
         success_url: `${baseUrl}/?contribution=success`,
         cancel_url: `${baseUrl}/?contribution=cancelled`,
       });

@@ -206,50 +206,18 @@ function PolicyHeader() {
                 Sustenance Protocol
               </DropdownMenuLabel>
               <div className="px-2 py-1">
-                <p className="text-xs text-cyan-400/60 mb-3">
+                <p className="text-xs text-cyan-400/60 mb-2">
                   Freely offered. If this signal helps, you may support its continuation.
                 </p>
-                <div className="grid grid-cols-3 gap-1.5 mb-2">
-                  {[5, 10, 25].map((amt) => (
-                    <Button
-                      key={amt}
-                      className="relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
-                      variant="outline"
-                      data-testid={`button-contribute-${amt}`}
-                      onClick={async () => {
-                        try {
-                          const res = await fetch("/api/contribute/checkout", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ amount: amt * 100 }),
-                          });
-                          const data = await res.json();
-                          if (data.url) {
-                            window.location.href = data.url;
-                          }
-                        } catch {
-                          console.error("Failed to open contribution page");
-                        }
-                      }}
-                    >
-                      <span style={{ color: '#00D2FF' }}>${amt}</span>
-                    </Button>
-                  ))}
-                </div>
                 <Button
                   className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
                   variant="outline"
-                  data-testid="button-contribute-custom"
+                  data-testid="button-contribute"
                   onClick={async () => {
-                    const input = prompt("Enter contribution amount (USD):");
-                    if (!input) return;
-                    const amt = parseFloat(input);
-                    if (!amt || amt < 1) return;
                     try {
                       const res = await fetch("/api/contribute/checkout", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ amount: Math.round(amt * 100) }),
                       });
                       const data = await res.json();
                       if (data.url) {
@@ -261,7 +229,7 @@ function PolicyHeader() {
                   }}
                 >
                   <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
-                  <span style={{ color: '#00D2FF' }}>CUSTOM AMOUNT</span>
+                  <span style={{ color: '#00D2FF' }}>CONTRIBUTE</span>
                 </Button>
               </div>
               
