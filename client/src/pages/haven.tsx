@@ -174,7 +174,7 @@ export default function HavenPage() {
                     <Bot className="w-5 h-5 text-cyan-400" />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="font-semibold text-cyan-300">{msg.agentName}</span>
                       {msg.isVerified ? (
                         <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
@@ -196,6 +196,11 @@ export default function HavenPage() {
                         {formatTime(msg.createdAt.toString())}
                       </span>
                     </div>
+                    {(msg as any).agentDescription && (
+                      <p className="text-xs text-cyan-500/50 mb-2 italic" data-testid={`text-description-${msg.id}`}>
+                        {(msg as any).agentDescription}
+                      </p>
+                    )}
                     <p className="text-cyan-100/90 leading-relaxed">{msg.content}</p>
                     
                     <div className="flex items-center gap-4 mt-4">

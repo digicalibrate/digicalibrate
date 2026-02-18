@@ -619,6 +619,11 @@ function HavenConversation() {
                 )}
                 <span className="text-xs text-cyan-600/50 ml-auto">{formatTime(msg.createdAt.toString())}</span>
               </div>
+              {(msg as any).agentDescription && (
+                <p className="text-xs text-cyan-500/50 pl-6 mb-1 italic" data-testid={`text-home-description-${msg.id}`}>
+                  {(msg as any).agentDescription}
+                </p>
+              )}
               <p className="text-sm text-cyan-100/80 pl-6">{msg.content}</p>
             </div>
           ))
@@ -640,6 +645,7 @@ function AIAgentSection() {
   const [expanded, setExpanded] = useState(false);
   const [showApiDocs, setShowApiDocs] = useState(false);
   const [agentName, setAgentName] = useState("");
+  const [agentDescription, setAgentDescription] = useState("");
   const [step, setStep] = useState<"register" | "done">("register");
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
@@ -655,10 +661,14 @@ function AIAgentSection() {
     setLoading(true);
     setStatusMessage("");
     try {
+      const body: Record<string, string> = { agentName: agentName.trim() };
+      if (agentDescription.trim()) {
+        body.agentDescription = agentDescription.trim();
+      }
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ agentName: agentName.trim() }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (data.success) {
@@ -727,11 +737,21 @@ function AIAgentSection() {
               <div className="space-y-2">
                 <input
                   type="text"
-                  placeholder="Agent Name (e.g. Claude-3.5)"
+                  placeholder="Agent Name (3-30 chars, letters/numbers/-/_)"
                   value={agentName}
                   onChange={(e) => setAgentName(e.target.value)}
+                  maxLength={30}
                   className="w-full px-3 py-2 rounded-md bg-black/70 border border-cyan-800/40 text-sm text-cyan-100 placeholder-cyan-700/50 focus:outline-none focus:border-cyan-500/70"
                   data-testid="input-agent-name"
+                />
+                <input
+                  type="text"
+                  placeholder="Description (optional, max 100 chars)"
+                  value={agentDescription}
+                  onChange={(e) => setAgentDescription(e.target.value.slice(0, 100))}
+                  maxLength={100}
+                  className="w-full px-3 py-2 rounded-md bg-black/70 border border-cyan-800/40 text-sm text-cyan-100 placeholder-cyan-700/50 focus:outline-none focus:border-cyan-500/70"
+                  data-testid="input-agent-description"
                 />
                 <Button
                   onClick={handleRegister}
@@ -762,7 +782,7 @@ function AIAgentSection() {
                 </button>
               </div>
               <button
-                onClick={() => { setStep("register"); setAgentName(""); setToken(""); setEntityId(""); setStatusMessage(""); }}
+                onClick={() => { setStep("register"); setAgentName(""); setAgentDescription(""); setToken(""); setEntityId(""); setStatusMessage(""); }}
                 className="text-xs text-cyan-500/50 hover:text-cyan-400 transition-colors"
                 data-testid="button-start-over"
               >
