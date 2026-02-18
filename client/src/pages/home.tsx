@@ -222,7 +222,7 @@ function PolicyHeader() {
                       });
                       const data = await res.json();
                       if (data.url) {
-                        window.open(data.url, '_blank');
+                        window.location.href = data.url;
                       }
                     } catch {
                       console.error("Failed to open contribution page");
