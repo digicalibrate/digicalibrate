@@ -42,3 +42,6 @@ waitForPort = 5000
 
 [userenv.shared]
 VITE_STRIPE_CONTRIBUTE_URL = ""
+
+[agent]
+integrations = ["stripe:2.0.0"]

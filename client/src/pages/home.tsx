@@ -213,18 +213,25 @@ function PolicyHeader() {
                   className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
                   variant="outline"
                   data-testid="button-contribute"
-                  disabled={!import.meta.env.VITE_STRIPE_CONTRIBUTE_URL}
-                  onClick={() => {
-                    const url = import.meta.env.VITE_STRIPE_CONTRIBUTE_URL;
-                    if (url) window.open(url, '_blank');
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/contribute/checkout", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ amount: 1000 }),
+                      });
+                      const data = await res.json();
+                      if (data.url) {
+                        window.open(data.url, '_blank');
+                      }
+                    } catch {
+                      console.error("Failed to open contribution page");
+                    }
                   }}
                 >
                   <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
                   <span style={{ color: '#00D2FF' }}>CONTRIBUTE</span>
                 </Button>
-                {!import.meta.env.VITE_STRIPE_CONTRIBUTE_URL && (
-                  <p className="text-[10px] text-cyan-700/40 mt-1 text-center">Contribution link not configured.</p>
-                )}
               </div>
               
               <div 

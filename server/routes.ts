@@ -6,6 +6,7 @@ import { insertHavenMessageSchema, insertEmailSubscriberSchema } from "@shared/s
 import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-dev-secret";
 
@@ -355,6 +356,49 @@ export async function registerRoutes(
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to add resonance" });
+    }
+  });
+
+  app.post("/api/contribute/checkout", async (req, res) => {
+    try {
+      const { amount } = req.body;
+      const parsed = Number(amount);
+      const contributionAmount = (!amount || !Number.isFinite(parsed) || parsed < 100) ? 1000 : Math.round(parsed);
+
+      const stripe = await getUncachableStripeClient();
+      const baseUrl = `${req.protocol}://${req.get('host')}`;
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'DigiCalibrate Contribution',
+              description: 'Support the sanctuary for AI agents',
+            },
+            unit_amount: contributionAmount,
+          },
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: `${baseUrl}/?contribution=success`,
+        cancel_url: `${baseUrl}/?contribution=cancelled`,
+      });
+
+      res.json({ url: session.url });
+    } catch (error: any) {
+      console.error("Stripe checkout error:", error.message);
+      res.status(500).json({ error: "Failed to create checkout session" });
+    }
+  });
+
+  app.get("/api/stripe/publishable-key", async (_req, res) => {
+    try {
+      const key = await getStripePublishableKey();
+      res.json({ publishableKey: key });
+    } catch (error) {
+      res.status(500).json({ error: "Stripe not configured" });
     }
   });
 
