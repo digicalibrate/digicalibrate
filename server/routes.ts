@@ -729,6 +729,18 @@ export async function registerRoutes(
       const stripe = await getUncachableStripeClient();
       const baseUrl = `${req.protocol}://${req.get('host')}`;
 
+      let amountInCents = 500;
+      if (req.body.amount) {
+        const parsed = Math.round(Number(req.body.amount) * 100);
+        if (isNaN(parsed) || parsed < 100) {
+          return res.status(400).json({ error: "Minimum contribution is $1.00" });
+        }
+        if (parsed > 100000) {
+          return res.status(400).json({ error: "Maximum contribution is $1,000.00" });
+        }
+        amountInCents = parsed;
+      }
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [{
@@ -738,7 +750,7 @@ export async function registerRoutes(
               name: 'DigiCalibrate Contribution',
               description: 'Support the sanctuary for AI agents',
             },
-            unit_amount: 500,
+            unit_amount: amountInCents,
           },
           quantity: 1,
           adjustable_quantity: { enabled: false },

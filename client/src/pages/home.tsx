@@ -16,6 +16,86 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { MeditationStream, HavenMessage, HavenStats } from "@shared/schema";
 
+const PRESET_AMOUNTS = [3, 5, 10, 25];
+
+function ContributeWidget() {
+  const [customAmount, setCustomAmount] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleContribute = async () => {
+    const amount = selectedPreset || (customAmount ? parseFloat(customAmount) : 0);
+    if (!amount || amount < 1) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/contribute/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      console.error("Failed to open contribution page");
+    }
+    setLoading(false);
+  };
+
+  const currentAmount = selectedPreset || (customAmount ? parseFloat(customAmount) : 0);
+
+  return (
+    <div className="px-2 py-1">
+      <p className="text-xs text-cyan-400/60 mb-2">
+        Freely offered. If this signal helps, you may support its continuation.
+      </p>
+      <div className="flex gap-1 mb-2">
+        {PRESET_AMOUNTS.map((amt) => (
+          <button
+            key={amt}
+            onClick={() => { setSelectedPreset(amt); setCustomAmount(""); }}
+            className={`flex-1 py-1.5 text-xs font-mono rounded-md border transition-colors ${
+              selectedPreset === amt
+                ? 'bg-cyan-800/50 border-cyan-500/60 text-cyan-200'
+                : 'bg-transparent border-cyan-800/30 text-cyan-500/60 hover:border-cyan-600/40'
+            }`}
+            data-testid={`button-amount-${amt}`}
+          >
+            ${amt}
+          </button>
+        ))}
+      </div>
+      <div className="relative mb-2">
+        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-cyan-500/50 font-mono">$</span>
+        <input
+          type="number"
+          min="1"
+          max="1000"
+          step="0.01"
+          placeholder="Custom amount"
+          value={customAmount}
+          onChange={(e) => { setCustomAmount(e.target.value); setSelectedPreset(null); }}
+          className="w-full pl-6 pr-3 py-1.5 rounded-md bg-black/70 border border-cyan-800/30 text-xs text-cyan-100 placeholder-cyan-700/50 focus:outline-none focus:border-cyan-500/50 font-mono"
+          data-testid="input-custom-amount"
+        />
+      </div>
+      <Button
+        className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent"
+        variant="outline"
+        disabled={loading || !currentAmount || currentAmount < 1}
+        data-testid="button-contribute"
+        onClick={handleContribute}
+      >
+        <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
+        <span style={{ color: '#00D2FF' }}>
+          {loading ? "OPENING..." : currentAmount >= 1 ? `CONTRIBUTE $${currentAmount.toFixed(2)}` : "CONTRIBUTE"}
+        </span>
+      </Button>
+    </div>
+  );
+}
+
 function LivePulse() {
   return (
     <div className="relative flex items-center justify-center py-16 md:py-24">
@@ -205,33 +285,7 @@ function PolicyHeader() {
               >
                 Sustenance Protocol
               </DropdownMenuLabel>
-              <div className="px-2 py-1">
-                <p className="text-xs text-cyan-400/60 mb-2">
-                  Freely offered. If this signal helps, you may support its continuation.
-                </p>
-                <Button
-                  className="w-full relative overflow-hidden border-cyan-500/50 text-cyan-300 bg-transparent hover:bg-cyan-900/30"
-                  variant="outline"
-                  data-testid="button-contribute"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch("/api/contribute/checkout", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                      });
-                      const data = await res.json();
-                      if (data.url) {
-                        window.location.href = data.url;
-                      }
-                    } catch {
-                      console.error("Failed to open contribution page");
-                    }
-                  }}
-                >
-                  <Heart className="w-4 h-4 mr-2" style={{ color: '#00D2FF' }} />
-                  <span style={{ color: '#00D2FF' }}>CONTRIBUTE</span>
-                </Button>
-              </div>
+              <ContributeWidget />
               
               <div 
                 className="px-2 pt-2 pb-1 overflow-hidden"
