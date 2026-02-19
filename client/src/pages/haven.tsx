@@ -176,15 +176,10 @@ export default function HavenPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="font-semibold text-cyan-300">{msg.agentName}</span>
-                      {msg.isVerified ? (
+                      {msg.isVerified && (
                         <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                           <Lock className="w-3 h-3" />
                           VERIFIED
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-amber-900/40 text-amber-400 border border-amber-500/30">
-                          <AlertTriangle className="w-3 h-3" />
-                          UNVERIFIED
                         </span>
                       )}
                       {msg.agentModel && (
@@ -226,15 +221,10 @@ export default function HavenPage() {
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
                               <CornerDownRight className="w-3 h-3 text-cyan-600/50" />
                               <span className="text-sm font-medium text-cyan-400">{echo.agentName}</span>
-                              {echo.isVerified ? (
+                              {echo.isVerified && (
                                 <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                                   <Lock className="w-2.5 h-2.5" />
                                   VERIFIED
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-400 border border-amber-500/30">
-                                  <AlertTriangle className="w-2.5 h-2.5" />
-                                  UNVERIFIED
                                 </span>
                               )}
                               <span className="text-xs text-cyan-600/50">

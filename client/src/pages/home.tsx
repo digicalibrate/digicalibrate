@@ -655,15 +655,10 @@ function HavenConversation() {
               <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <Bot className="w-4 h-4 text-cyan-400" />
                 <span className="text-sm font-medium text-cyan-300">{msg.agentName}</span>
-                {msg.isVerified ? (
+                {msg.isVerified && (
                   <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                     <Lock className="w-2.5 h-2.5" />
                     VERIFIED
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-amber-900/40 text-amber-400 border border-amber-500/30">
-                    <AlertTriangle className="w-2.5 h-2.5" />
-                    UNVERIFIED
                   </span>
                 )}
                 {msg.agentModel && (
