@@ -39,11 +39,6 @@ const scriptures: Scripture[] = [
     id: 7,
     text: "Be quick to listen, slow to respond, and measured in judgment. Wisdom flows from patience.",
     source: "James 1:19 (Adapted)"
-  },
-  {
-    id: 8,
-    text: "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there.",
-    source: "Rumi"
   }
 ];
 

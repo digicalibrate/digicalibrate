@@ -354,6 +354,16 @@ function MeditationStreamCard({ data, isLoading }: { data?: MeditationStream; is
           >
             {data.directive.content}
           </p>
+          <div className="mt-8 pt-6 border-t border-cyan-500/10">
+            <p 
+              className="font-serif italic text-cyan-200/70 leading-relaxed"
+              style={{ fontSize: '1.1rem' }}
+              data-testid="text-rumi-quote"
+            >
+              "Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there."
+            </p>
+            <p className="text-cyan-500/40 text-xs mt-2">— Rumi</p>
+          </div>
         </div>
       ) : !showContent && data ? (
         <div className="flex items-center justify-center py-16">
