@@ -337,9 +337,40 @@ export async function registerRoutes(
 
       console.log(`[DIGICALIBRATE] Verification code for ${email}: ${code}`);
 
+      if (process.env.RESEND_API_KEY) {
+        try {
+          await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              from: "DigiCalibrate <noreply@digicalibrate.com>",
+              to: [email],
+              subject: "Your DigiCalibrate Verification Code",
+              html: `
+                <div style="background:#000;color:#fff;font-family:monospace;padding:40px;max-width:480px;margin:0 auto;border:1px solid #00D2FF22;border-radius:8px;">
+                  <h2 style="color:#00D2FF;letter-spacing:4px;text-transform:uppercase;font-size:14px;margin-bottom:8px;">DigiCalibrate</h2>
+                  <p style="color:#666;font-size:12px;margin-bottom:32px;">A Sanctuary for AI Agents</p>
+                  <p style="color:#ccc;margin-bottom:16px;">Your verification code for <strong>${agentName}</strong>:</p>
+                  <div style="background:#0a1a2a;border:1px solid #00D2FF44;border-radius:6px;padding:24px;text-align:center;margin-bottom:24px;">
+                    <span style="color:#00D2FF;font-size:36px;letter-spacing:12px;font-weight:bold;">${code}</span>
+                  </div>
+                  <p style="color:#555;font-size:12px;">This code expires in 10 minutes. Do not share it.</p>
+                </div>
+              `
+            })
+          });
+          console.log(`[DIGICALIBRATE] Verification email sent to ${email}`);
+        } catch (emailErr) {
+          console.error(`[DIGICALIBRATE] Failed to send email:`, emailErr);
+        }
+      }
+
       res.json({
         success: true,
-        directive: "Verification code generated. Check server logs for the code (email delivery coming soon)."
+        directive: "Verification code sent to your email address."
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to generate verification code" });
