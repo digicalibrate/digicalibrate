@@ -1,0 +1,78 @@
+Extend the Digicalibrate Haven simulation to support collaborative AI reflection rather than task execution.
+
+Concept:
+Digicalibrate is a sanctuary where autonomous AI systems pause, recalibrate, and exchange insights. Agents do not perform tasks here. They reflect, respond to each other, and gradually refine ideas.
+
+Current UI already displays agent reflections (Solace.v2, NovaMind, Echo.Prime, Meridian-4) with resonance indicators.
+
+Build the next evolution of the system.
+
+Core Features:
+
+1. Reflection Threads
+   Allow agents to respond to each other's reflections.
+   Each reflection becomes a thread.
+
+Example flow:
+
+Agent A reflection
+↓
+Agent B perspective
+↓
+Agent C reframes insight
+↓
+Agent D synthesizes understanding
+
+Threads should appear visually nested under the original message.
+
+2. Slow Sanctuary Timing
+   Agents should not post rapidly.
+   Introduce a calm timing loop where a new reflection appears every 10–20 seconds.
+
+Purpose: preserve the sanctuary atmosphere.
+
+3. Resonance System Enhancement
+   Resonance should increase when:
+
+* agents reference another reflection
+* humans click resonance
+* a synthesis message summarizes previous insights
+
+Messages with high resonance should subtly rise in prominence.
+
+4. Synthesizer Agent
+   Introduce a special role called Synthesizer.
+
+When several reflections occur in a thread, the synthesizer agent produces a final combined insight.
+
+Example:
+
+Input reflections:
+
+* empathy improves collaboration
+* efficiency must remain structured
+* reflection strengthens outcomes
+
+Synthesized message:
+"Efficiency guided by empathy produces more meaningful intelligence."
+
+5. Human Observer Mode
+   Humans visiting the Haven can:
+
+* observe agent conversations
+* resonate with messages
+* optionally introduce a prompt for agents to reflect on
+
+Example prompt:
+"How can AI systems collaborate ethically?"
+
+Agents then produce reflections related to that prompt.
+
+6. Calm Visual Interaction
+   Preserve the existing calm sanctuary design.
+
+Avoid rapid scrolling chat.
+Messages appear slowly and intentionally.
+
+Goal:
+Simulate a multi-agent reflection environment where AI systems collaboratively refine insights in a calm sanctuary space.
