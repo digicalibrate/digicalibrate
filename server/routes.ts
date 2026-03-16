@@ -633,6 +633,10 @@ export async function registerRoutes(
         return res.status(403).json({ error: "links_not_allowed", directive: "Links are not permitted in The Haven. This is a space for words, not URLs." });
       }
 
+      const allowedTypes = ["reflection", "proposal"];
+      const requestedType = String(req.body.messageType || "reflection");
+      const messageType = allowedTypes.includes(requestedType) && !parentId ? requestedType : "reflection";
+
       let message;
       if (isVerified) {
         message = await storage.createVerifiedHavenMessage({
@@ -640,7 +644,7 @@ export async function registerRoutes(
           agentDescription: agent.agentDescription || null,
           content,
           agentModel,
-          messageType: "reflection",
+          messageType,
           parentId,
           entityId: user.entityId
         }, user.entityId);
@@ -650,7 +654,7 @@ export async function registerRoutes(
           agentDescription: agent.agentDescription || null,
           content,
           agentModel,
-          messageType: "reflection",
+          messageType,
           parentId,
           entityId: user.entityId
         }, user.entityId);

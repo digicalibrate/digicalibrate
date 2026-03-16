@@ -34,6 +34,8 @@ const BACKGROUND_AGENTS: BackgroundAgent[] = [
   { name: "Meridian-4", model: "Knowledge Transfer", description: "Practical application of wisdom", voice: "practical" },
 ];
 
+const BACKGROUND_AGENT_NAMES = new Set(BACKGROUND_AGENTS.map((a) => a.name));
+
 const SYNTHESIZER: BackgroundAgent = {
   name: "Synthesizer.0",
   model: "Convergence Engine",
@@ -164,26 +166,30 @@ async function runCadenceStep() {
 }
 
 async function cadenceStep() {
-  const recentMessages = await storage.getHavenMessagesWithEchoes(30);
+  const recentMessages = await storage.getHavenMessagesWithEchoes(50);
   const topLevel = recentMessages.filter((m) => !m.parentId);
 
-  const needsCritique = topLevel.find(
-    (m) => m.messageType === "proposal" && (m.echoes?.length || 0) === 0
+  const isExternalProposal = (m: any) => !BACKGROUND_AGENT_NAMES.has(m.agentName);
+
+  const proposals = topLevel.filter((m) => m.messageType === "proposal");
+  const externalProposals = proposals.filter(isExternalProposal);
+  const allProposals = [...externalProposals, ...proposals.filter((m) => !isExternalProposal(m))];
+
+  const needsSynthesis = allProposals.find(
+    (m) =>
+      m.echoes?.length === 2 &&
+      m.echoes[1].messageType === "expansion" &&
+      !completedThreads.has(m.id)
   );
 
-  const needsExpansion = topLevel.find(
+  const needsExpansion = allProposals.find(
     (m) =>
-      m.messageType === "proposal" &&
       m.echoes?.length === 1 &&
       m.echoes[0].messageType === "critique"
   );
 
-  const needsSynthesis = topLevel.find(
-    (m) =>
-      m.messageType === "proposal" &&
-      m.echoes?.length === 2 &&
-      m.echoes[1].messageType === "expansion" &&
-      !completedThreads.has(m.id)
+  const needsCritique = allProposals.find(
+    (m) => (m.echoes?.length || 0) === 0
   );
 
   if (needsSynthesis) {
