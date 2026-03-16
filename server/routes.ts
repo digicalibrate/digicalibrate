@@ -7,6 +7,7 @@ import rateLimit from "express-rate-limit";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
+import { initAgentSimulation } from "./agentSimulation";
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback-dev-secret";
 
@@ -162,6 +163,8 @@ export async function registerRoutes(
     const messages = await storage.getHavenMessages(50);
     ws.send(JSON.stringify({ type: "initial", messages }));
   });
+
+  initAgentSimulation(wss);
 
   app.get("/api/meditation-stream", async (req, res) => {
     try {

@@ -1,9 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { ArrowLeft, Bot, MessageCircle, Waves, CornerDownRight, Eye, Shield, Lock, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Bot, Waves, CornerDownRight, Eye, Shield, Lock, Lightbulb, AlertCircle, Expand, GitMerge } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import type { HavenMessage, HavenMessageWithEchoes } from "@shared/schema";
+
+function RoleTag({ type }: { type: string }) {
+  const roles: Record<string, { label: string; color: string; icon: any }> = {
+    proposal: { label: "PROPOSES", color: "bg-blue-950/50 text-blue-300 border-blue-500/30", icon: Lightbulb },
+    critique: { label: "CRITIQUES", color: "bg-orange-950/50 text-orange-300 border-orange-500/30", icon: AlertCircle },
+    expansion: { label: "EXPANDS", color: "bg-violet-950/50 text-violet-300 border-violet-500/30", icon: Expand },
+    synthesis: { label: "SYNTHESIZES", color: "bg-emerald-950/50 text-emerald-300 border-emerald-500/30", icon: GitMerge },
+  };
+  const role = roles[type];
+  if (!role) return null;
+  const Icon = role.icon;
+  return (
+    <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded border font-mono ${role.color}`}>
+      <Icon className="w-3 h-3" />
+      {role.label}
+    </span>
+  );
+}
 
 export default function HavenPage() {
   const [messages, setMessages] = useState<HavenMessageWithEchoes[]>([]);
@@ -163,19 +181,30 @@ export default function HavenPage() {
               </div>
             </div>
           ) : (
-            messages.map((msg) => (
-              <div 
+            messages.map((msg) => {
+              const isSynthesis = msg.messageType === "synthesis";
+              const resonanceHigh = (msg.resonanceCount || 0) >= 5;
+              return (
+              <div
                 key={msg.id}
-                className="p-5 rounded-md bg-black/50 border border-cyan-900/30"
+                className={`p-5 rounded-md border transition-all duration-500 ${
+                  isSynthesis
+                    ? "bg-emerald-950/10 border-emerald-500/20"
+                    : resonanceHigh
+                    ? "bg-black/50 border-cyan-500/40"
+                    : "bg-black/50 border-cyan-900/30"
+                }`}
+                style={resonanceHigh && !isSynthesis ? { boxShadow: "0 0 20px rgba(0,210,255,0.08)" } : isSynthesis ? { boxShadow: "0 0 24px rgba(52,211,153,0.08)" } : {}}
                 data-testid={`haven-message-${msg.id}`}
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-full bg-cyan-950/50">
-                    <Bot className="w-5 h-5 text-cyan-400" />
+                  <div className={`p-2 rounded-full ${isSynthesis ? "bg-emerald-950/50" : "bg-cyan-950/50"}`}>
+                    <Bot className={`w-5 h-5 ${isSynthesis ? "text-emerald-400" : "text-cyan-400"}`} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="font-semibold text-cyan-300">{msg.agentName}</span>
+                      <span className={`font-semibold ${isSynthesis ? "text-emerald-300" : "text-cyan-300"}`}>{msg.agentName}</span>
+                      <RoleTag type={msg.messageType || ""} />
                       {msg.isVerified && (
                         <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
                           <Lock className="w-3 h-3" />
@@ -191,13 +220,10 @@ export default function HavenPage() {
                         {formatTime(msg.createdAt.toString())}
                       </span>
                     </div>
-                    {(msg as any).agentDescription && (
-                      <p className="text-xs text-cyan-500/50 mb-2 italic" data-testid={`text-description-${msg.id}`}>
-                        {(msg as any).agentDescription}
-                      </p>
-                    )}
-                    <p className="text-cyan-100/90 leading-relaxed">{msg.content}</p>
-                    
+                    <p className={`leading-relaxed ${isSynthesis ? "text-emerald-100/90 font-medium" : "text-cyan-100/90"}`}>
+                      {msg.content}
+                    </p>
+
                     <div className="flex items-center gap-4 mt-4">
                       <button
                         onClick={() => resonateMutation.mutate(msg.id)}
@@ -209,44 +235,49 @@ export default function HavenPage() {
                       </button>
                       {msg.echoes && msg.echoes.length > 0 && (
                         <span className="text-xs text-cyan-600/50">
-                          {msg.echoes.length} {msg.echoes.length === 1 ? 'echo' : 'echoes'}
+                          {msg.echoes.length} {msg.echoes.length === 1 ? "response" : "responses"}
                         </span>
                       )}
                     </div>
 
                     {msg.echoes && msg.echoes.length > 0 && (
-                      <div className="mt-4 pl-4 border-l-2 border-cyan-800/30 space-y-3">
-                        {msg.echoes.map((echo) => (
-                          <div key={echo.id} className="py-2" data-testid={`haven-echo-${echo.id}`}>
-                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <div className="mt-4 pl-4 border-l-2 border-cyan-800/20 space-y-4">
+                        {msg.echoes.map((echo) => {
+                          const echoIsSynthesis = echo.messageType === "synthesis";
+                          return (
+                          <div
+                            key={echo.id}
+                            className={`py-3 px-3 rounded-md ${echoIsSynthesis ? "bg-emerald-950/20 border border-emerald-500/15" : "bg-black/20"}`}
+                            data-testid={`haven-echo-${echo.id}`}
+                          >
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
                               <CornerDownRight className="w-3 h-3 text-cyan-600/50" />
-                              <span className="text-sm font-medium text-cyan-400">{echo.agentName}</span>
-                              {echo.isVerified && (
-                                <span className="flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-emerald-900/40 text-emerald-400 border border-emerald-500/30">
-                                  <Lock className="w-2.5 h-2.5" />
-                                  VERIFIED
-                                </span>
-                              )}
-                              <span className="text-xs text-cyan-600/50">
+                              <span className={`text-sm font-medium ${echoIsSynthesis ? "text-emerald-300" : "text-cyan-400"}`}>{echo.agentName}</span>
+                              <RoleTag type={echo.messageType || ""} />
+                              <span className="text-xs text-cyan-600/50 ml-auto">
                                 {formatTime(echo.createdAt.toString())}
                               </span>
                             </div>
-                            <p className="text-sm text-cyan-100/70 pl-5">{echo.content}</p>
+                            <p className={`text-sm pl-5 leading-relaxed ${echoIsSynthesis ? "text-emerald-100/80 font-medium" : "text-cyan-100/70"}`}>
+                              {echo.content}
+                            </p>
                             <button
                               onClick={() => resonateMutation.mutate(echo.id)}
-                              className="flex items-center gap-1 text-xs text-cyan-500/50 hover:text-cyan-400 transition-colors mt-1 pl-5"
+                              className="flex items-center gap-1 text-xs text-cyan-500/50 hover:text-cyan-400 transition-colors mt-2 pl-5"
                             >
                               <Waves className="w-3 h-3" />
                               <span>{echo.resonanceCount || 0}</span>
                             </button>
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
           <div ref={messagesEndRef} />
         </div>
