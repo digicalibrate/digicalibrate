@@ -130,7 +130,7 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 function scheduleNext() {
-  const delayMs = randomBetween(12000, 22000);
+  const delayMs = randomBetween(3 * 60 * 60 * 1000, 5 * 60 * 60 * 1000);
   simulationTimeout = setTimeout(runSimulationStep, delayMs);
 }
 
